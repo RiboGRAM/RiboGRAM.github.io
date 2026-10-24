@@ -12,28 +12,28 @@
     // light-to-dark step within its class ramp; deliberately varied alpha values
     // preserve the finer annotation without producing a rainbow effect.
     const TYPE_STYLES = {
-        "miRNA": { color: "#626a90", alpha: .48 },
-        "sRNA": { color: "#3e8192", alpha: .47 },
-        "C/D-box snoRNA": { color: "#245a8e", alpha: .52 },
-        "H/ACA-box snoRNA": { color: "#5796cc", alpha: .48 },
-        "lncRNA": { color: "#5494a2", alpha: .44 },
-        "Gene": { color: "#83919c", alpha: .38 },
-        "CRISPR": { color: "#4b557b", alpha: .54 },
-        "Antisense RNA": { color: "#567184", alpha: .47 },
-        "Ribozyme": { color: "#2f716b", alpha: .50 },
-        "snRNA": { color: "#7b6c99", alpha: .50 },
-        "Spliceosomal RNA": { color: "#5e537b", alpha: .53 },
-        "rRNA": { color: "#1e3a5f", alpha: .52 },
-        "Antitoxin RNA": { color: "#558884", alpha: .47 },
-        "tRNA": { color: "#3f75a2", alpha: .54 },
-        "Cis-regulatory RNA": { color: "#9c6725", alpha: .54 },
-        "Leader": { color: "#80531d", alpha: .58 },
-        "Riboswitch": { color: "#d88928", alpha: .62 },
-        "Thermoregulator": { color: "#be7823", alpha: .58 },
-        "IRES": { color: "#a57d48", alpha: .54 },
-        "Frameshift element": { color: "#b55233", alpha: .58 },
-        "Intron": { color: "#694b7c", alpha: .68 },
-        "Unclassified": { color: "#98a2aa", alpha: .34 }
+        "miRNA": { color: "#59638f", alpha: .62 },
+        "sRNA": { color: "#2d8092", alpha: .60 },
+        "C/D-box snoRNA": { color: "#1f5c91", alpha: .68 },
+        "H/ACA-box snoRNA": { color: "#4c86bf", alpha: .64 },
+        "lncRNA": { color: "#3f8fa1", alpha: .57 },
+        "Gene": { color: "#74838f", alpha: .52 },
+        "CRISPR": { color: "#465077", alpha: .68 },
+        "Antisense RNA": { color: "#466e85", alpha: .59 },
+        "Ribozyme": { color: "#237169", alpha: .63 },
+        "snRNA": { color: "#745b90", alpha: .64 },
+        "Spliceosomal RNA": { color: "#55456f", alpha: .67 },
+        "rRNA": { color: "#173a5e", alpha: .68 },
+        "Antitoxin RNA": { color: "#3d817b", alpha: .59 },
+        "tRNA": { color: "#2e6d9b", alpha: .68 },
+        "Cis-regulatory RNA": { color: "#9b6120", alpha: .68 },
+        "Leader": { color: "#7c4c18", alpha: .74 },
+        "Riboswitch": { color: "#e48925", alpha: .80 },
+        "Thermoregulator": { color: "#c6761d", alpha: .75 },
+        "IRES": { color: "#a9783d", alpha: .68 },
+        "Frameshift element": { color: "#c25735", alpha: .75 },
+        "Intron": { color: "#624572", alpha: .84 },
+        "Unclassified": { color: "#8c969e", alpha: .45 }
     };
     const TYPE_COLORS = Object.fromEntries(Object.entries(TYPE_STYLES).map(([key, value]) => [key, value.color]));
     const CLASS_STYLES = {
@@ -447,8 +447,8 @@
             else if (this.colorMode === "class") alpha = point._classAlpha;
             else alpha = point._typeAlpha;
             if (this.filteredPoints.length < 30000) alpha = Math.min(.88, alpha * 1.16);
-            else alpha = Math.min(.86, alpha * 1.25);
-            return selectedFamily ? alpha * .24 : alpha;
+            else alpha = Math.min(.95, alpha * 1.15);
+            return selectedFamily ? alpha * .30 : alpha;
         }
 
         draw() {
@@ -465,7 +465,7 @@
             }
             const radius = this.filteredPoints.length <= 10 ? 4.2
                 : this.filteredPoints.length <= 200 ? 3
-                    : this.zoom > 3.5 ? 2.35 : this.zoom > 1.8 ? 1.55 : this.filteredPoints.length > 30000 ? .65 : 1.35;
+                    : this.zoom > 3.5 ? 2.35 : this.zoom > 1.8 ? 1.55 : this.filteredPoints.length > 30000 ? .70 : 1.35;
             const selectedFamily = this.selected && this.filteredPoints.includes(this.selected) ? this.selected.family : null;
             for (const point of this.filteredPoints) {
                 const position = this.screenPosition(point);
