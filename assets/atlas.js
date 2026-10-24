@@ -8,38 +8,38 @@
 
     // COMPASS-inspired scientific palette.  The map reads first as three
     // biological classes: cool tones for gene-derived ncRNAs, warm tones for
-    // cis-regulators, and violet for introns.  Closely related subtype hues
-    // and deliberately varied alpha values preserve the finer annotation
-    // without producing a rainbow effect in the 92k-point overview.
+    // cis-regulators, and violet for introns.  Each subtype occupies a distinct
+    // light-to-dark step within its class ramp; deliberately varied alpha values
+    // preserve the finer annotation without producing a rainbow effect.
     const TYPE_STYLES = {
-        "miRNA": { color: "#6f72a8", alpha: .36 },
-        "sRNA": { color: "#2a9d8f", alpha: .34 },
-        "C/D-box snoRNA": { color: "#0073e6", alpha: .38 },
-        "H/ACA-box snoRNA": { color: "#5b7fbf", alpha: .36 },
-        "lncRNA": { color: "#16a3c2", alpha: .32 },
-        "Gene": { color: "#8fa3b6", alpha: .26 },
-        "CRISPR": { color: "#6b63a8", alpha: .39 },
-        "Antisense RNA": { color: "#4e8098", alpha: .34 },
-        "Ribozyme": { color: "#1f9e89", alpha: .36 },
-        "snRNA": { color: "#8e5bc9", alpha: .35 },
-        "Spliceosomal RNA": { color: "#5e548e", alpha: .37 },
-        "rRNA": { color: "#2d4773", alpha: .36 },
-        "Antitoxin RNA": { color: "#3a8f8b", alpha: .34 },
-        "tRNA": { color: "#3e79a8", alpha: .39 },
-        "Cis-regulatory RNA": { color: "#c9871f", alpha: .40 },
-        "Leader": { color: "#b8860b", alpha: .42 },
-        "Riboswitch": { color: "#f39a22", alpha: .46 },
-        "Thermoregulator": { color: "#d98e04", alpha: .43 },
-        "IRES": { color: "#a67c52", alpha: .41 },
-        "Frameshift element": { color: "#d9623b", alpha: .43 },
-        "Intron": { color: "#7a5c9d", alpha: .50 },
-        "Unclassified": { color: "#a7b0b8", alpha: .25 }
+        "miRNA": { color: "#626a90", alpha: .48 },
+        "sRNA": { color: "#3e8192", alpha: .47 },
+        "C/D-box snoRNA": { color: "#245a8e", alpha: .52 },
+        "H/ACA-box snoRNA": { color: "#5796cc", alpha: .48 },
+        "lncRNA": { color: "#5494a2", alpha: .44 },
+        "Gene": { color: "#83919c", alpha: .38 },
+        "CRISPR": { color: "#4b557b", alpha: .54 },
+        "Antisense RNA": { color: "#567184", alpha: .47 },
+        "Ribozyme": { color: "#2f716b", alpha: .50 },
+        "snRNA": { color: "#7b6c99", alpha: .50 },
+        "Spliceosomal RNA": { color: "#5e537b", alpha: .53 },
+        "rRNA": { color: "#1e3a5f", alpha: .52 },
+        "Antitoxin RNA": { color: "#558884", alpha: .47 },
+        "tRNA": { color: "#3f75a2", alpha: .54 },
+        "Cis-regulatory RNA": { color: "#9c6725", alpha: .54 },
+        "Leader": { color: "#80531d", alpha: .58 },
+        "Riboswitch": { color: "#d88928", alpha: .62 },
+        "Thermoregulator": { color: "#be7823", alpha: .58 },
+        "IRES": { color: "#a57d48", alpha: .54 },
+        "Frameshift element": { color: "#b55233", alpha: .58 },
+        "Intron": { color: "#694b7c", alpha: .68 },
+        "Unclassified": { color: "#98a2aa", alpha: .34 }
     };
     const TYPE_COLORS = Object.fromEntries(Object.entries(TYPE_STYLES).map(([key, value]) => [key, value.color]));
     const CLASS_STYLES = {
-        "Gene": { color: "#2d77ba", alpha: .42 },
-        "Cis-reg.": { color: "#f39a22", alpha: .54 },
-        "Intron": { color: "#7a5c9d", alpha: .64 }
+        "Gene": { color: "#2d5f83", alpha: .50 },
+        "Cis-reg.": { color: "#b97020", alpha: .60 },
+        "Intron": { color: "#694b7c", alpha: .68 }
     };
     const SELECTED_COLOR = "#0073e6";
     const NEUTRAL_COLOR = "#9aa7b2";
@@ -132,6 +132,7 @@
             this.familySelect = root.querySelector("[data-rfx-family]");
             this.colorSelect = root.querySelector("[data-rfx-color]");
             this.legend = root.querySelector("[data-rfx-legend]");
+            this.classKey = root.querySelector("[data-rfx-class-key]");
             this.loading = root.querySelector("[data-rfx-loading]");
             this.visibleLabel = root.querySelector("[data-rfx-visible]");
             this.fatal = root.querySelector("[data-rfx-fatal]");
@@ -446,6 +447,7 @@
             else if (this.colorMode === "class") alpha = point._classAlpha;
             else alpha = point._typeAlpha;
             if (this.filteredPoints.length < 30000) alpha = Math.min(.88, alpha * 1.16);
+            else alpha = Math.min(.86, alpha * 1.25);
             return selectedFamily ? alpha * .24 : alpha;
         }
 
@@ -463,7 +465,7 @@
             }
             const radius = this.filteredPoints.length <= 10 ? 4.2
                 : this.filteredPoints.length <= 200 ? 3
-                    : this.zoom > 3.5 ? 2.35 : this.zoom > 1.8 ? 1.55 : this.filteredPoints.length > 30000 ? .72 : 1.35;
+                    : this.zoom > 3.5 ? 2.35 : this.zoom > 1.8 ? 1.55 : this.filteredPoints.length > 30000 ? .65 : 1.35;
             const selectedFamily = this.selected && this.filteredPoints.includes(this.selected) ? this.selected.family : null;
             for (const point of this.filteredPoints) {
                 const position = this.screenPosition(point);
@@ -618,6 +620,12 @@
 
         renderLegend() {
             if (!this.data) return;
+            if (this.classKey) {
+                this.classKey.hidden = !["subtype", "class"].includes(this.colorMode);
+                this.classKey.innerHTML = Object.entries(CLASS_STYLES).map(([label, style]) =>
+                    `<span><i style="background:${style.color}"></i>${escapeHTML(label === "Gene" ? "Gene / ncRNA" : label)}</span>`
+                ).join("");
+            }
             if (this.colorMode === "neutral") {
                 this.legend.innerHTML = `<span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:${NEUTRAL_COLOR}"></i>All Rfam Seed RNAs</span><span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:${SELECTED_COLOR}"></i>Selected family</span>`;
                 return;
@@ -628,7 +636,7 @@
             }
             if (this.colorMode === "class") {
                 this.legend.innerHTML = Object.entries(CLASS_STYLES).map(([label, style]) =>
-                    `<span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:${style.color};opacity:${style.alpha}"></i>${escapeHTML(label === "Gene" ? "Gene · ncRNA" : label)}</span>`
+                    `<span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:${style.color};opacity:.9"></i>${escapeHTML(label === "Gene" ? "Gene · ncRNA" : label)}</span>`
                 ).join("");
                 return;
             }
@@ -645,7 +653,7 @@
                 const heading = className === "Gene" ? "Gene · ncRNA subtypes" : className;
                 const entries = items.map((item) => {
                     const style = TYPE_STYLES[item.label] || TYPE_STYLES.Unclassified;
-                    return `<span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:${style.color};opacity:${style.alpha}"></i>${escapeHTML(item.label)}</span>`;
+                    return `<span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:${style.color};opacity:.9"></i>${escapeHTML(item.label)}</span>`;
                 }).join("");
                 return `<section class="rfx-legend-group"><strong>${escapeHTML(heading)}</strong><div>${entries}</div></section>`;
             }).join("");
