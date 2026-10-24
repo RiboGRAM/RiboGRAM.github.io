@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#060916">
+  <meta name="description" content="Explore 92,781 Rfam Seed sequences through the representation space learned by RiboGRAM.">
+  <meta property="og:title" content="RiboGRAM Atlas">
+  <meta property="og:description" content="An interactive atlas of the multi-scale grammar learned across non-coding RNA families.">
+  <title>RiboGRAM Atlas · The landscape of non-coding RNA grammar</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/atlas.css">
+</head>
+<body>
+  <main
+    class="atlas-shell"
+    data-rfam-explorer
+    data-manifest="data/manifest.json"
+    aria-label="RiboGRAM Atlas — Rfam 15.0 Seed representation explorer"
+  >
+    <header class="atlas-nav">
+      <a class="atlas-brand" href="./" aria-label="RiboGRAM Atlas home">
+        <svg class="atlas-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <path d="M11 7c10 0 18 6 18 13s-8 13-18 13" />
+          <path d="M29 7c-10 0-18 6-18 13s8 13 18 13" />
+          <circle cx="12" cy="11" r="2.2" />
+          <circle cx="28" cy="17" r="2.2" />
+          <circle cx="12" cy="23" r="2.2" />
+          <circle cx="28" cy="29" r="2.2" />
+        </svg>
+        <span class="atlas-brand-copy">
+          <strong>RiboGRAM</strong>
+          <span>ATLAS</span>
+        </span>
+      </a>
+
+      <div class="atlas-stats" aria-label="Atlas summary">
+        <span><strong data-rfx-stat="points">92,781</strong> sequences</span>
+        <i></i>
+        <span><strong data-rfx-stat="families">4,178</strong> families</span>
+        <i></i>
+        <span><strong>Rfam 15.0</strong> Seed</span>
+      </div>
+
+      <nav class="atlas-links" aria-label="Project links">
+        <a href="https://www.biorxiv.org/content/10.64898/2026.10.12.758266v1" target="_blank" rel="noreferrer">Paper</a>
+        <a href="https://github.com/RiboGRAM" target="_blank" rel="noreferrer">GitHub</a>
+        <button type="button" data-atlas-about>About</button>
+      </nav>
+    </header>
+
+    <section class="atlas-map" data-rfx-map aria-label="Interactive RNA representation map">
+      <canvas
+        data-rfx-canvas
+        tabindex="0"
+        role="img"
+        aria-label="Interactive two-dimensional UMAP projection of RiboGRAM Layer-12 sequence representations"
+      ></canvas>
+
+      <div class="atlas-map-copy">
+        <p class="atlas-eyebrow">THE LANDSCAPE OF NON-CODING RNA GRAMMAR</p>
+        <h1>Explore RNA as a<br><em>learned universe.</em></h1>
+        <p>Every point is an Rfam Seed sequence positioned by the representation learned by RiboGRAM.</p>
+      </div>
+
+      <div class="rfx-axis rfx-axis-x">UMAP 1</div>
+      <div class="rfx-axis rfx-axis-y">UMAP 2</div>
+      <div class="rfx-tooltip" data-rfx-tooltip hidden></div>
+
+      <div class="rfx-map-loading" data-rfx-loading>
+        <svg class="loading-orbit" viewBox="0 0 56 56" aria-hidden="true">
+          <circle cx="28" cy="28" r="17"></circle>
+          <circle cx="28" cy="11" r="3"></circle>
+        </svg>
+        <strong>Mapping the RNA universe</strong>
+        <span>Loading 92,781 Rfam Seed sequences…</span>
+      </div>
+    </section>
+
+    <section class="atlas-toolbar" role="search" aria-label="Explore the RNA atlas">
+      <label class="rfx-search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>
+        <span class="rfx-visually-hidden">Search sequence or family</span>
+        <input type="search" data-rfx-search placeholder="Search family, accession or RNA sequence" autocomplete="off">
+        <kbd>/</kbd>
+      </label>
+
+      <label class="rfx-control">
+        <span>Family</span>
+        <select data-rfx-family aria-label="Filter by Rfam family">
+          <option value="all">All 4,178 families</option>
+        </select>
+      </label>
+
+      <label class="rfx-control rfx-color-control">
+        <span>Color</span>
+        <select data-rfx-color aria-label="Color points by">
+          <option value="subtype">RNA type</option>
+          <option value="family">Rfam family</option>
+        </select>
+      </label>
+
+      <button class="rfx-icon-button" type="button" data-rfx-reset title="Reset map" aria-label="Reset map">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 8.5V4.8h3.7"></path><path d="M5.2 5.5A8 8 0 1 1 4 14"></path></svg>
+      </button>
+    </section>
+
+    <section class="atlas-legend-shell" aria-label="Map legend">
+      <div class="atlas-visible">
+        <span class="atlas-live-dot"></span>
+        <strong data-rfx-visible>92,781 sequences</strong>
+      </div>
+      <div class="rfx-legend" data-rfx-legend aria-label="Projection legend"></div>
+      <button class="atlas-legend-toggle" type="button" data-legend-toggle aria-expanded="false">All types</button>
+    </section>
+
+    <div class="atlas-map-guide">
+      <span>Scroll to zoom</span><i></i><span>Drag to move</span><i></i><span>Select a point</span>
+    </div>
+
+    <aside class="rfx-inspector" data-rfx-inspector aria-live="polite" aria-label="Selected RNA details">
+      <div class="rfx-inspector-empty">
+        <span class="empty-orbit"><i></i></span>
+        <strong>Select an RNA</strong>
+        <p>Choose a point to inspect its Rfam annotation, sequence and position in the learned space.</p>
+      </div>
+    </aside>
+
+    <button class="atlas-drawer-backdrop" type="button" data-inspector-backdrop aria-label="Close selected RNA details"></button>
+    <div class="rfx-fatal" data-rfx-fatal hidden></div>
+
+    <dialog class="atlas-about" data-about-dialog>
+      <button class="atlas-dialog-close" type="button" data-about-close aria-label="Close">×</button>
+      <p class="atlas-eyebrow">ABOUT THE ATLAS</p>
+      <h2>A visual map of the grammar learned by RiboGRAM.</h2>
+      <p>RiboGRAM Atlas organizes 92,781 sequences from all 4,178 families in the Rfam 15.0 Seed collection. Positions are derived from a two-dimensional UMAP projection of RiboGRAM sequence representations.</p>
+      <dl>
+        <div><dt>Model</dt><dd>RiboGRAM</dd></div>
+        <div><dt>Collection</dt><dd>Rfam 15.0 Seed</dd></div>
+        <div><dt>Projection</dt><dd>UMAP · 2D</dd></div>
+      </dl>
+      <a class="atlas-paper-button" href="https://www.biorxiv.org/content/10.64898/2026.10.12.758266v1" target="_blank" rel="noreferrer">Read the RiboGRAM preprint <span>↗</span></a>
+      <p class="atlas-citation">Wang H., Chen Z., Huang H. et al. <em>RiboGRAM learns multi-scale non-coding RNA grammar for structural and regulatory inference.</em> bioRxiv (2026).</p>
+    </dialog>
+  </main>
+
+  <noscript>RiboGRAM Atlas requires JavaScript to render the interactive map.</noscript>
+  <script src="assets/atlas.js" defer></script>
+</body>
+</html>
