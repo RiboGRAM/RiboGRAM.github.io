@@ -8,15 +8,11 @@ An immersive, single-page visualization of the representation space learned by R
 - Semantic labels, pan/zoom, point inspection and shareable sequence URLs
 - Buildless static deployment for GitHub Pages
 
-## Preview locally
+## Explore the atlas
 
-The atlas loads a compressed data bundle and therefore must be served over HTTP rather than opened directly from disk.
+**Launch the live website: [https://ribogram.github.io/](https://ribogram.github.io/)**
 
-```powershell
-python -m http.server 4173
-```
-
-Then open <http://127.0.0.1:4173/>.
+No installation or local server is required. Open the link in a modern browser to explore the complete interactive RNA landscape.
 
 ## Deploy
 
