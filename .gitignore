@@ -3,4 +3,7 @@ Thumbs.db
 .idea/
 .vscode/
 *.log
+*.part
+__pycache__/
+*.pyc
 

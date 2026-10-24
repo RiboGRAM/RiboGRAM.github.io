@@ -1,24 +1,27 @@
 (function () {
     "use strict";
 
-    const DEFAULT_ZOOM = 1.18;
+    // Fill the desktop canvas with the learned landscape while keeping the
+    // outer islands visible.  The previous conservative fit left a large,
+    // empty halo around the data on widescreen displays.
+    const DEFAULT_ZOOM = 1.22;
 
     const TYPE_COLORS = {
-        "C/D-box snoRNA": "#56c7e8", "H/ACA-box snoRNA": "#ffb45e",
-        "Spliceosomal RNA": "#ff7c91", "Cis-regulatory RNA": "#68a9ff",
-        "miRNA": "#f58bb6", "snRNA": "#a88cff", "sRNA": "#d094eb",
-        "lncRNA": "#66d2df", "Gene": "#9aa8c1", "CRISPR": "#ffc35a",
-        "Antisense RNA": "#ee947d", "Leader": "#6fd69a",
-        "Riboswitch": "#8ee06e", "Ribozyme": "#ead36c",
-        "Thermoregulator": "#75d4bb", "IRES": "#6eb8ee",
-        "Frameshift element": "#7b9bea", "rRNA": "#9584e8",
-        "Antitoxin RNA": "#e28f70", "Intron": "#e2ac74", "tRNA": "#ef9ea9",
-        "Unclassified": "#8795ad"
+        "C/D-box snoRNA": "#2487b8", "H/ACA-box snoRNA": "#e5a236",
+        "Spliceosomal RNA": "#d76b84", "Cis-regulatory RNA": "#347ac4",
+        "miRNA": "#d6618f", "snRNA": "#765ea8", "sRNA": "#a063ad",
+        "lncRNA": "#2695a3", "Gene": "#82909d", "CRISPR": "#d89023",
+        "Antisense RNA": "#c86d5a", "Leader": "#4b9972",
+        "Riboswitch": "#79a542", "Ribozyme": "#b3a03e",
+        "Thermoregulator": "#4a9a8b", "IRES": "#417fa9",
+        "Frameshift element": "#536fb0", "rRNA": "#7468b3",
+        "Antitoxin RNA": "#b06c4f", "Intron": "#b3844d", "tRNA": "#ca6e7c",
+        "Unclassified": "#8d99a4"
     };
     // Matplotlib-like magma palette used by the released attention notebook.
     const HEAT_STOPS = [[0, 0, 4], [28, 16, 68], [79, 18, 123], [129, 37, 129],
         [181, 54, 122], [229, 80, 100], [251, 135, 97], [254, 194, 135], [252, 253, 191]];
-    const BASE_COLORS = { A: "#72e5c4", C: "#66b4ff", G: "#ffc76b", U: "#ff8396", T: "#ff8396", N: "#8b95aa" };
+    const BASE_COLORS = { A: "#1a9a7a", C: "#2979bd", G: "#d99a24", U: "#d75d75", T: "#d75d75", N: "#8b95a0" };
     const clamp = (value, minimum, maximum) => Math.max(minimum, Math.min(maximum, value));
 
     function escapeHTML(value) {
@@ -33,7 +36,7 @@
         return Math.abs(hash * 137.508) % 360;
     }
 
-    function familyColor(value) { return `hsl(${stableHue(value).toFixed(1)} 68% 68%)`; }
+    function familyColor(value) { return `hsl(${stableHue(value).toFixed(1)} 48% 55%)`; }
 
     function heatColor(t) {
         const value = clamp(t, 0, 1) * (HEAT_STOPS.length - 1);
@@ -109,7 +112,7 @@
             this.hovered = null;
             this.query = "";
             this.familyFilter = "all";
-            this.colorMode = "subtype";
+            this.colorMode = "neutral";
             this.zoom = DEFAULT_ZOOM;
             this.panX = 0;
             this.panY = 0;
@@ -221,7 +224,10 @@
             if (sequence) {
                 const point = this.points.find((item) => item.id === sequence || item.accession === sequence);
                 if (point) {
-                    if (!family) this.fitPoints(this.points.filter((item) => item.family === point.family));
+                    // Keep enough of the atlas visible to preserve geographic context.  Tiny
+                    // families previously zoomed all the way to individual pixels, which made
+                    // deep links feel empty rather than like a place in a larger universe.
+                    if (!family) this.fitPoints(this.points.filter((item) => item.family === point.family), 2.65);
                     this.selectPoint(point, false);
                 }
             }
@@ -312,7 +318,7 @@
             this.root.querySelector("[data-legend-toggle]")?.addEventListener("click", (event) => {
                 const expanded = this.legendShell.classList.toggle("is-expanded");
                 event.currentTarget.setAttribute("aria-expanded", String(expanded));
-                event.currentTarget.textContent = expanded ? "Less" : "All types";
+                event.currentTarget.textContent = expanded ? "Hide legend" : "Legend";
             });
             this.root.querySelector("[data-atlas-about]")?.addEventListener("click", () => this.aboutDialog?.showModal());
             this.root.querySelector("[data-about-close]")?.addEventListener("click", () => this.aboutDialog?.close());
@@ -379,6 +385,7 @@
         }
 
         pointColor(point) {
+            if (this.colorMode === "neutral") return "#8798a4";
             if (this.colorMode === "family") return point._familyColor;
             return point._typeColor;
         }
@@ -389,17 +396,17 @@
             ctx.clearRect(0, 0, this.cssWidth, this.cssHeight);
             this.drawGrid(ctx);
             if (!this.filteredPoints.length) {
-                ctx.fillStyle = "#9aabba";
-                ctx.font = '600 13px Geneva, "Segoe UI", sans-serif';
+                ctx.fillStyle = "#77838f";
+                ctx.font = '600 13px ui-sans-serif, "Segoe UI", sans-serif';
                 ctx.textAlign = "center"; ctx.textBaseline = "middle";
                 ctx.fillText("No matching sequences", this.cssWidth / 2, this.cssHeight / 2);
                 return;
             }
             const radius = this.filteredPoints.length <= 10 ? 4.2
                 : this.filteredPoints.length <= 200 ? 3
-                    : this.zoom > 3.5 ? 2.35 : this.zoom > 1.8 ? 1.65 : this.filteredPoints.length > 30000 ? .9 : 1.45;
+                    : this.zoom > 3.5 ? 2.35 : this.zoom > 1.8 ? 1.55 : this.filteredPoints.length > 30000 ? .72 : 1.35;
             const selectedFamily = this.selected && this.filteredPoints.includes(this.selected) ? this.selected.family : null;
-            ctx.globalAlpha = selectedFamily ? .11 : this.filteredPoints.length > 30000 ? .58 : .76;
+            ctx.globalAlpha = selectedFamily ? .24 : this.filteredPoints.length > 30000 ? .59 : .74;
             for (const point of this.filteredPoints) {
                 const position = this.screenPosition(point);
                 if (position.x < -5 || position.y < -5 || position.x > this.cssWidth + 5 || position.y > this.cssHeight + 5) continue;
@@ -412,17 +419,18 @@
                 for (const point of this.selectedFamilyPoints) {
                     const position = this.screenPosition(point);
                     if (position.x < -5 || position.y < -5 || position.x > this.cssWidth + 5 || position.y > this.cssHeight + 5) continue;
-                    ctx.fillStyle = this.pointColor(point);
-                    const familyRadius = Math.max(1.35, radius * 1.45);
+                    ctx.fillStyle = this.colorMode === "neutral" ? "#0087dc" : this.pointColor(point);
+                    const familyRadius = Math.max(1.75, radius * 1.65);
                     ctx.fillRect(position.x - familyRadius, position.y - familyRadius, familyRadius * 2, familyRadius * 2);
                 }
             }
             ctx.globalAlpha = 1;
             this.drawLabels(ctx);
-            if (this.hovered) this.drawMarker(ctx, this.hovered, 5.5, "#dce8ef");
+            if (this.hovered) this.drawMarker(ctx, this.hovered, 5.5, "#15324b");
             if (this.selected && this.filteredPoints.includes(this.selected)) {
-                this.drawMarker(ctx, this.selected, 7.2, "#ffffff");
-                this.drawMarker(ctx, this.selected, 12, this.pointColor(this.selected), 1.2);
+                this.drawMarker(ctx, this.selected, 6.5, "#ffffff", 3.6);
+                this.drawMarker(ctx, this.selected, 8.5, "#16384e", 2.1);
+                this.drawMarker(ctx, this.selected, 13, this.colorMode === "neutral" ? "#0087dc" : this.pointColor(this.selected), 1.6);
             }
         }
 
@@ -435,7 +443,7 @@
                 .sort((left, right) => left.distance - right.distance)
                 .slice(0, 10);
             ctx.save();
-            ctx.globalAlpha = .17;
+            ctx.globalAlpha = .1;
             ctx.lineWidth = .75;
             ctx.strokeStyle = this.pointColor(this.selected);
             for (const neighbor of neighbors) {
@@ -451,7 +459,18 @@
         drawLabels(ctx) {
             if (this.filteredPoints.length < 3) return;
             let anchors;
-            if (this.familyFilter !== "all") {
+            if (this.selected) {
+                const family = this.selected._family;
+                anchors = [{
+                    label: family.name.replaceAll("_", " "),
+                    accession: family.accession,
+                    x: family.centroid_2d?.[0] ?? this.selected.x,
+                    y: family.centroid_2d?.[1] ?? this.selected.y,
+                    count: family.seed_count,
+                    color: this.colorMode === "neutral" ? "#0087dc" : this.pointColor(this.selected),
+                    selected: true
+                }];
+            } else if (this.familyFilter !== "all") {
                 const family = this.families.get(this.familyFilter);
                 anchors = family && Array.isArray(family.centroid_2d) ? [{
                     label: family.name.replaceAll("_", " "),
@@ -459,10 +478,12 @@
                     x: family.centroid_2d[0], y: family.centroid_2d[1], count: family.seed_count,
                     color: TYPE_COLORS[family.subtype] || familyColor(family.accession)
                 }] : [];
-            } else if (this.zoom < 1.8) {
-                anchors = this.subtypeAnchors.slice(0, 13);
+            } else if (this.zoom < 2.35) {
+                // The overview is intentionally label-free, like an atlas rather than a
+                // dashboard.  Labels appear as the visitor zooms into actual geography.
+                anchors = [];
             } else {
-                anchors = this.familyAnchors.slice(0, this.zoom > 4 ? 65 : 38);
+                anchors = this.familyAnchors.slice(0, this.zoom > 4 ? 42 : 22);
             }
             const occupied = [];
             ctx.save();
@@ -471,15 +492,16 @@
                 const position = this.screenPosition(anchor);
                 if (position.x < 80 || position.y < 95 || position.x > this.cssWidth - 80 || position.y > this.cssHeight - 54) continue;
                 const isSubtype = !anchor.accession;
-                ctx.font = `${isSubtype ? 650 : 580} ${isSubtype ? 9 : 8}px Inter, Segoe UI, sans-serif`;
+                ctx.font = `${isSubtype ? 650 : 580} ${isSubtype ? 9 : 8}px ui-sans-serif, Segoe UI, sans-serif`;
                 const label = isSubtype ? `${anchor.label} · ${anchor.count.toLocaleString()}` : `${anchor.label} · ${anchor.accession}`;
-                const width = ctx.measureText(label).width + (isSubtype ? 16 : 13);
-                const height = isSubtype ? 22 : 19;
-                const box = { left: position.x - width / 2, right: position.x + width / 2, top: position.y - height / 2, bottom: position.y + height / 2 };
+                const width = ctx.measureText(label).width + (anchor.selected ? 22 : (isSubtype ? 16 : 13));
+                const height = anchor.selected ? 24 : (isSubtype ? 22 : 19);
+                const centerX = anchor.selected ? position.x + width / 2 + 17 : position.x;
+                const box = { left: centerX - width / 2, right: centerX + width / 2, top: position.y - height / 2, bottom: position.y + height / 2 };
                 if (occupied.some((item) => !(box.right < item.left || box.left > item.right || box.bottom < item.top || box.top > item.bottom))) continue;
                 occupied.push(box);
-                ctx.globalAlpha = isSubtype ? .82 : .68;
-                ctx.fillStyle = "rgba(7, 11, 23, .82)";
+                ctx.globalAlpha = anchor.selected ? .97 : (isSubtype ? .92 : .78);
+                ctx.fillStyle = anchor.selected ? "rgba(255, 255, 255, .97)" : "rgba(255, 255, 255, .86)";
                 ctx.beginPath();
                 if (ctx.roundRect) ctx.roundRect(box.left, box.top, width, height, height / 2);
                 else ctx.rect(box.left, box.top, width, height);
@@ -487,11 +509,11 @@
                 ctx.globalAlpha = 1;
                 ctx.fillStyle = anchor.color;
                 ctx.beginPath();
-                ctx.arc(box.left + 7, position.y, 2.2, 0, Math.PI * 2);
+                ctx.arc(box.left + (anchor.selected ? 9 : 7), position.y, anchor.selected ? 3 : 2.2, 0, Math.PI * 2);
                 ctx.fill();
-                ctx.fillStyle = isSubtype ? "rgba(234, 237, 248, .88)" : "rgba(195, 202, 220, .74)";
+                ctx.fillStyle = anchor.selected ? "rgba(18, 45, 63, .96)" : (isSubtype ? "rgba(24, 43, 59, .9)" : "rgba(62, 79, 94, .82)");
                 ctx.textAlign = "left";
-                ctx.fillText(label, box.left + 12, position.y + .2);
+                ctx.fillText(label, box.left + (anchor.selected ? 16 : 12), position.y + .2);
             }
             ctx.restore();
         }
@@ -503,10 +525,13 @@
         }
 
         drawGrid(ctx) {
-            ctx.save(); ctx.strokeStyle = "rgba(137, 151, 183, .055)"; ctx.lineWidth = 1;
-            const step = 84, offsetX = ((this.panX % step) + step) % step, offsetY = ((this.panY % step) + step) % step;
-            for (let x = offsetX; x < this.cssWidth; x += step) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, this.cssHeight); ctx.stroke(); }
-            for (let y = offsetY; y < this.cssHeight; y += step) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(this.cssWidth, y); ctx.stroke(); }
+            ctx.save();
+            const gradient = ctx.createRadialGradient(this.cssWidth * .5, this.cssHeight * .48, 0,
+                this.cssWidth * .5, this.cssHeight * .48, Math.max(this.cssWidth, this.cssHeight) * .62);
+            gradient.addColorStop(0, "rgba(230, 237, 241, .18)");
+            gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, this.cssWidth, this.cssHeight);
             ctx.restore();
         }
 
@@ -534,6 +559,10 @@
 
         renderLegend() {
             if (!this.data) return;
+            if (this.colorMode === "neutral") {
+                this.legend.innerHTML = `<span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:#8798a4"></i>All Rfam Seed RNAs</span><span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:#0087dc"></i>Selected family</span>`;
+                return;
+            }
             if (this.colorMode === "family") {
                 this.legend.innerHTML = `<span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:#6fa8c7"></i>Stable color per Rfam accession</span><span class="rfx-legend-item">Official Rfam 15.0 family annotation</span>`;
                 return;
@@ -611,7 +640,7 @@
 
         resetView() { this.zoom = DEFAULT_ZOOM; this.panX = 0; this.panY = 0; this.draw(); }
 
-        fitPoints(points) {
+        fitPoints(points, maximumZoom = 12) {
             if (!points.length || !this.cssWidth || !this.cssHeight) return;
             let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
             for (const point of points) {
@@ -621,7 +650,7 @@
             const geometry = this.plotGeometry();
             const width = Math.max(1, (maxX - minX) * geometry.scale);
             const height = Math.max(1, (maxY - minY) * geometry.scale);
-            this.zoom = clamp(Math.min((this.cssWidth * .66) / width, (this.cssHeight * .66) / height), 1, 12);
+            this.zoom = clamp(Math.min((this.cssWidth * .62) / width, (this.cssHeight * .62) / height), 1, maximumZoom);
             const centerX = (minX + maxX) / 2, centerY = (minY + maxY) / 2;
             this.panX = -(centerX - geometry.midX) * geometry.scale * this.zoom;
             this.panY = (centerY - geometry.midY) * geometry.scale * this.zoom;
@@ -666,7 +695,7 @@
             } catch (_error) {
                 if (requestId !== this.selectionRequest) return;
                 const target = this.inspector.querySelector("[data-rfx-analysis]");
-                if (target) target.remove();
+                if (target) target.innerHTML = `<div class="rfx-analysis-unavailable"><strong>Model interpretation unavailable</strong><span>The verified detail bundle for this sequence could not be loaded.</span></div>`;
             }
         }
 
@@ -713,7 +742,7 @@
             const centroidDistance = Math.hypot(point.x - centroid[0], point.y - centroid[1]);
             const compositionBars = bases.map((item) => `<i style="width:${(item.count / Math.max(1, sequence.length) * 100).toFixed(2)}%;background:${BASE_COLORS[item.base]}"></i>`).join("");
             const compositionLabels = bases.map((item) => `<span style="color:${BASE_COLORS[item.base]}">${item.base} ${(item.count / Math.max(1, sequence.length) * 100).toFixed(1)}%</span>`).join("");
-            this.inspector.innerHTML = `<div class="rfx-inspector-head"><p class="rfx-kicker">Rfam Seed sequence</p><div class="rfx-inspector-title-row"><div><h3>${escapeHTML(family.name.replaceAll("_", " "))}</h3><div class="rfx-accession">${escapeHTML(point.family)} · ${escapeHTML(point.accession)}</div></div><div style="display:flex;gap:6px"><button type="button" class="rfx-copy" data-rfx-copy>Copy RNA</button><button type="button" class="rfx-drawer-close" data-rfx-close aria-label="Close">Close</button></div></div><div class="rfx-tag-row"><span class="rfx-tag" style="--tag-color:${point._typeColor}">${escapeHTML(family.subtype)}</span><span class="rfx-tag" style="--tag-color:${point._familyColor}">${point.length.toLocaleString()} nt</span><span class="rfx-tag" style="--tag-color:#72e5c4">${family.seed_count.toLocaleString()} family seeds</span></div></div><div class="rfx-inspector-body"><div class="rfx-annotation-grid"><div class="rfx-annotation"><span>Rfam family</span><strong title="${escapeHTML(family.description)}">${escapeHTML(point.family)} · ${escapeHTML(family.name)}</strong><small>${escapeHTML(family.description)}</small></div><div class="rfx-annotation"><span>ncRNA category</span><strong>${escapeHTML(family.subtype)}</strong><small>${escapeHTML(family.type)}</small></div><div class="rfx-annotation"><span>Source sequence ID</span><strong title="${escapeHTML(point.accession)}">${escapeHTML(point.accession)}</strong><small>Official Rfam 15.0 Seed accession</small></div><div class="rfx-annotation"><span>Rfam clan</span><strong>${escapeHTML(clan)}</strong><small>Atlas ID ${escapeHTML(point.id)}</small></div></div><div class="rfx-section-title"><h4>Position in representation space</h4><span>Layer 12 · UMAP</span></div><div class="rfx-space-metrics"><div><span>UMAP 1</span><strong>${point.x.toFixed(3)}</strong></div><div><span>UMAP 2</span><strong>${point.y.toFixed(3)}</strong></div><div><span>To centroid</span><strong>${centroidDistance.toFixed(3)}</strong></div></div><div class="rfx-section-title"><h4>RNA sequence</h4><span>5′ → 3′</span></div>${windowNote}<pre class="rfx-sequence">${escapeHTML(formatSequence(point.sequence))}</pre><div class="rfx-section-title"><h4>Nucleotide composition</h4><span>${point.length.toLocaleString()} nt</span></div><div class="rfx-composition"><div class="rfx-composition-bar">${compositionBars}</div><div class="rfx-composition-labels">${compositionLabels}</div></div><div data-rfx-analysis></div><a class="rfx-rfam-link" href="https://rfam.org/family/${encodeURIComponent(point.family)}" target="_blank" rel="noreferrer"><span>Open ${escapeHTML(point.family)} in Rfam</span><span>↗</span></a></div>`;
+            this.inspector.innerHTML = `<div class="rfx-inspector-head"><p class="rfx-kicker">Rfam Seed · ${escapeHTML(point.id)}</p><div class="rfx-inspector-title-row"><div><h3>${escapeHTML(family.name.replaceAll("_", " "))}</h3><div class="rfx-accession">${escapeHTML(point.family)} · ${escapeHTML(point.accession)}</div></div><div class="rfx-head-actions"><button type="button" class="rfx-copy" data-rfx-copy>Copy RNA</button><button type="button" class="rfx-drawer-close" data-rfx-close aria-label="Close sequence details">×</button></div></div><div class="rfx-tag-row"><span class="rfx-tag" style="--tag-color:${point._typeColor}">${escapeHTML(family.subtype)}</span><span class="rfx-tag" style="--tag-color:${point._familyColor}">${point.length.toLocaleString()} nt</span><span class="rfx-tag" style="--tag-color:#1a9a7a">${family.seed_count.toLocaleString()} family seeds</span></div></div><div class="rfx-inspector-body"><div data-rfx-analysis><div class="rfx-analysis-loading"><i></i><span>Loading model interpretation…</span></div></div><details class="rfx-disclosure" open><summary>Sequence & annotation <span>5′ → 3′</span></summary><div class="rfx-disclosure-body"><div class="rfx-annotation-grid"><div class="rfx-annotation"><span>Rfam family</span><strong title="${escapeHTML(family.description)}">${escapeHTML(point.family)} · ${escapeHTML(family.name)}</strong><small>${escapeHTML(family.description)}</small></div><div class="rfx-annotation"><span>ncRNA category</span><strong>${escapeHTML(family.subtype)}</strong><small>${escapeHTML(family.type)}</small></div><div class="rfx-annotation"><span>Source sequence</span><strong title="${escapeHTML(point.accession)}">${escapeHTML(point.accession)}</strong><small>Official Rfam 15.0 Seed accession</small></div><div class="rfx-annotation"><span>Rfam clan</span><strong>${escapeHTML(clan)}</strong><small>${escapeHTML(point.id)}</small></div></div>${windowNote}<pre class="rfx-sequence">${escapeHTML(formatSequence(point.sequence))}</pre><div class="rfx-composition"><div class="rfx-composition-bar">${compositionBars}</div><div class="rfx-composition-labels">${compositionLabels}</div></div></div></details><details class="rfx-disclosure"><summary>Representation coordinates <span>Layer 12 · UMAP</span></summary><div class="rfx-disclosure-body"><div class="rfx-space-metrics"><div><span>UMAP 1</span><strong>${point.x.toFixed(3)}</strong></div><div><span>UMAP 2</span><strong>${point.y.toFixed(3)}</strong></div><div><span>To centroid</span><strong>${centroidDistance.toFixed(3)}</strong></div></div></div></details><a class="rfx-rfam-link" href="https://rfam.org/family/${encodeURIComponent(point.family)}" target="_blank" rel="noreferrer"><span>Open ${escapeHTML(point.family)} in Rfam</span><span>↗</span></a></div>`;
             this.inspector.scrollTop = 0;
             this.inspector.querySelector("[data-rfx-copy]").addEventListener("click", async (event) => {
                 await navigator.clipboard.writeText(point.sequence);
@@ -729,9 +758,20 @@
                 ? detail.contextual_dependency.values
                 : decodeUint16(detail.contextual_dependency.values, detail.contextual_dependency.scale_max);
             const analysisSequence = point.sequence.slice(0, detail.analysis_length || point.analysis_length);
-            target.innerHTML = `<div class="rfx-section-title"><h4>Pair-like attention</h4><span>Layer 12 · Head 20 · APC</span></div><div class="rfx-chart-frame rfx-attention-frame"><canvas data-rfx-attention aria-label="Pair-like attention heatmap"></canvas><span class="rfx-chart-tip" data-rfx-attention-tip hidden></span></div><div class="rfx-section-title"><h4>Sequence contextual dependency score</h4></div><div class="rfx-chart-frame rfx-context-frame"><canvas data-rfx-context aria-label="Position-resolved sequence contextual dependency score logo"></canvas><span class="rfx-chart-tip" data-rfx-context-tip hidden></span></div>`;
-            this.drawAttention(target.querySelector("[data-rfx-attention]"), detail.attention);
-            requestAnimationFrame(() => this.drawContext(target.querySelector("[data-rfx-context]"), analysisSequence, contextValues));
+            const context = detail.contextual_dependency || {};
+            const attention = detail.attention || {};
+            const pairs = Array.isArray(attention.pairs) ? attention.pairs : [];
+            const strongest = pairs.reduce((best, pair) => Number(pair[2]) > Number(best?.[2] || 0) ? pair : best, null);
+            const pairList = pairs.slice(0, 8).map((pair) => {
+                const left = Number(pair[0]), right = Number(pair[1]);
+                const leftBase = analysisSequence[left - 1] || "N", rightBase = analysisSequence[right - 1] || "N";
+                return `<li><span>${leftBase}${left}—${rightBase}${right}</span><strong>${Number(pair[2]).toFixed(3)}</strong></li>`;
+            }).join("");
+            target.innerHTML = `<section class="rfx-interpretation-intro"><p class="rfx-kicker">Model interpretation</p><h4>What RiboGRAM sees in this RNA</h4><p>Position-resolved dependency and unsupervised pairing signals from the released RiboGRAM backbone.</p><div class="rfx-model-metrics"><div><span>Mean context</span><strong>${Number(context.mean || 0).toFixed(3)}</strong></div><div><span>Maximum</span><strong>${Number(context.maximum || context.scale_max || 0).toFixed(3)}</strong></div><div><span>Predicted pairs</span><strong>${Number(attention.predicted_pair_count || pairs.length).toLocaleString()}</strong></div><div><span>Top APC</span><strong>${strongest ? Number(strongest[2]).toFixed(3) : "—"}</strong></div></div></section><section class="rfx-analysis-section"><div class="rfx-analysis-heading"><div><p>01 · Sequence context</p><h4>Context dependency score</h4></div><span>Position resolved</span></div><p class="rfx-analysis-note">Higher values mark nucleotides whose surrounding sequence changes the model representation most strongly.</p><div class="rfx-chart-frame rfx-context-frame"><canvas data-rfx-context aria-label="Position-resolved sequence contextual dependency scores"></canvas><span class="rfx-chart-tip" data-rfx-context-tip hidden></span></div></section><section class="rfx-analysis-section"><div class="rfx-analysis-heading"><div><p>02 · Zero-shot structure</p><h4>Base-pair signal map</h4></div><span>L12 · H20 · APC ≥ ${Number(attention.pair_threshold || .4).toFixed(1)}</span></div><p class="rfx-analysis-note">Symmetrized, APC-corrected attention. Bright cells indicate pair-like signals discovered without secondary-structure labels.</p><div class="rfx-chart-frame rfx-attention-frame"><canvas data-rfx-attention aria-label="Zero-shot base-pair signal map"></canvas><span class="rfx-chart-tip" data-rfx-attention-tip hidden></span></div>${pairList ? `<ol class="rfx-pair-list">${pairList}</ol>` : `<p class="rfx-no-pairs">No pair exceeded the released threshold.</p>`}</section>`;
+            requestAnimationFrame(() => {
+                this.drawContext(target.querySelector("[data-rfx-context]"), analysisSequence, contextValues);
+                this.drawAttention(target.querySelector("[data-rfx-attention]"), attention);
+            });
         }
 
         drawAttention(canvas, attention) {

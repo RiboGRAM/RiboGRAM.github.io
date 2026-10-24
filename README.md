@@ -5,6 +5,7 @@ An immersive, single-page visualization of the representation space learned by R
 - **92,781** Seed sequences
 - **4,178** Rfam families
 - Search, family filtering and RNA-type/family coloring
+- Sequence-context dependency scores and zero-shot base-pair signal maps
 - Semantic labels, pan/zoom, point inspection and shareable sequence URLs
 - Buildless static deployment for GitHub Pages
 
@@ -20,7 +21,7 @@ The included GitHub Actions workflow publishes the repository root to GitHub Pag
 
 ## Data provenance
 
-The bundled projection contains public Rfam 15.0 Seed sequences and precomputed two-dimensional UMAP coordinates from RiboGRAM Layer-12 representations. The interface does not perform model inference in the browser.
+The bundled projection contains public Rfam 15.0 Seed sequences and precomputed two-dimensional UMAP coordinates from RiboGRAM Layer-12 representations. Per-sequence detail bundles contain the released position-resolved contextual-dependency scores and symmetrized, APC-corrected Layer-12 Head-20 attention signals. The interface does not perform model inference in the browser.
 
 ## Citation
 
