@@ -6,40 +6,46 @@
     // empty halo around the data on widescreen displays.
     const DEFAULT_ZOOM = 1.22;
 
-    // Muted, publication-style palette. Gene subtypes use cool mineral and
-    // botanical tones; cis-regulatory elements use warmer greens and ochres;
-    // introns use a restrained violet. Per-subtype alpha keeps dense regions
-    // legible without turning the atlas into a saturated categorical plot.
+    // COMPASS-inspired scientific palette.  The map reads first as three
+    // biological classes: cool tones for gene-derived ncRNAs, warm tones for
+    // cis-regulators, and violet for introns.  Closely related subtype hues
+    // and deliberately varied alpha values preserve the finer annotation
+    // without producing a rainbow effect in the 92k-point overview.
     const TYPE_STYLES = {
-        "miRNA": { color: "#c47d96", alpha: .58 },
-        "sRNA": { color: "#769b91", alpha: .54 },
-        "C/D-box snoRNA": { color: "#6f91ae", alpha: .60 },
-        "H/ACA-box snoRNA": { color: "#c6a066", alpha: .62 },
-        "lncRNA": { color: "#659a9b", alpha: .55 },
-        "Gene": { color: "#94a0a8", alpha: .50 },
-        "CRISPR": { color: "#b58460", alpha: .64 },
-        "Antisense RNA": { color: "#bc7f74", alpha: .58 },
-        "Ribozyme": { color: "#9b9767", alpha: .58 },
-        "snRNA": { color: "#8a80a5", alpha: .58 },
-        "Spliceosomal RNA": { color: "#a0789a", alpha: .58 },
-        "rRNA": { color: "#7889a6", alpha: .58 },
-        "Antitoxin RNA": { color: "#b08372", alpha: .58 },
-        "tRNA": { color: "#c58a82", alpha: .62 },
-        "Cis-regulatory RNA": { color: "#89a477", alpha: .62 },
-        "Leader": { color: "#6f9b84", alpha: .64 },
-        "Riboswitch": { color: "#a4a963", alpha: .68 },
-        "Thermoregulator": { color: "#63a09a", alpha: .64 },
-        "IRES": { color: "#6d8faa", alpha: .64 },
-        "Frameshift element": { color: "#8a86ae", alpha: .64 },
-        "Intron": { color: "#9b82a8", alpha: .74 },
-        "Unclassified": { color: "#8b98a1", alpha: .48 }
+        "miRNA": { color: "#6f72a8", alpha: .36 },
+        "sRNA": { color: "#2a9d8f", alpha: .34 },
+        "C/D-box snoRNA": { color: "#0073e6", alpha: .38 },
+        "H/ACA-box snoRNA": { color: "#5b7fbf", alpha: .36 },
+        "lncRNA": { color: "#16a3c2", alpha: .32 },
+        "Gene": { color: "#8fa3b6", alpha: .26 },
+        "CRISPR": { color: "#6b63a8", alpha: .39 },
+        "Antisense RNA": { color: "#4e8098", alpha: .34 },
+        "Ribozyme": { color: "#1f9e89", alpha: .36 },
+        "snRNA": { color: "#8e5bc9", alpha: .35 },
+        "Spliceosomal RNA": { color: "#5e548e", alpha: .37 },
+        "rRNA": { color: "#2d4773", alpha: .36 },
+        "Antitoxin RNA": { color: "#3a8f8b", alpha: .34 },
+        "tRNA": { color: "#3e79a8", alpha: .39 },
+        "Cis-regulatory RNA": { color: "#c9871f", alpha: .40 },
+        "Leader": { color: "#b8860b", alpha: .42 },
+        "Riboswitch": { color: "#f39a22", alpha: .46 },
+        "Thermoregulator": { color: "#d98e04", alpha: .43 },
+        "IRES": { color: "#a67c52", alpha: .41 },
+        "Frameshift element": { color: "#d9623b", alpha: .43 },
+        "Intron": { color: "#7a5c9d", alpha: .50 },
+        "Unclassified": { color: "#a7b0b8", alpha: .25 }
     };
     const TYPE_COLORS = Object.fromEntries(Object.entries(TYPE_STYLES).map(([key, value]) => [key, value.color]));
     const CLASS_STYLES = {
-        "Gene": { color: "#7896aa", alpha: .50 },
-        "Cis-reg.": { color: "#a79766", alpha: .64 },
-        "Intron": { color: "#9b82a8", alpha: .74 }
+        "Gene": { color: "#2d77ba", alpha: .42 },
+        "Cis-reg.": { color: "#f39a22", alpha: .54 },
+        "Intron": { color: "#7a5c9d", alpha: .64 }
     };
+    const SELECTED_COLOR = "#0073e6";
+    const NEUTRAL_COLOR = "#9aa7b2";
+    const FAMILY_PALETTE = ["#0073e6", "#2d4773", "#e0a800", "#d9623b", "#1f9e89", "#8e5bc9",
+        "#16a3c2", "#c44e8a", "#6f8f3a", "#b0413e", "#5b7fbf", "#a67c52",
+        "#3a8f5c", "#9c6ade", "#d98e04", "#4a6378", "#e07a9a", "#2a9d8f"];
     // Matplotlib-like magma palette used by the released attention notebook.
     const HEAT_STOPS = [[0, 0, 4], [28, 16, 68], [79, 18, 123], [129, 37, 129],
         [181, 54, 122], [229, 80, 100], [251, 135, 97], [254, 194, 135], [252, 253, 191]];
@@ -51,14 +57,14 @@
             .replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
     }
 
-    function stableHue(value) {
+    function stableIndex(value, length) {
         let hash = 0;
         const text = String(value);
         for (let index = 0; index < text.length; index += 1) hash = ((hash << 5) - hash + text.charCodeAt(index)) | 0;
-        return Math.abs(hash * 137.508) % 360;
+        return Math.abs(hash) % length;
     }
 
-    function familyColor(value) { return `hsl(${stableHue(value).toFixed(1)} 32% 60%)`; }
+    function familyColor(value) { return FAMILY_PALETTE[stableIndex(value, FAMILY_PALETTE.length)]; }
 
     function rfamClass(type) {
         const value = String(type || "");
@@ -427,7 +433,7 @@
         }
 
         pointColor(point) {
-            if (this.colorMode === "neutral") return "#8798a4";
+            if (this.colorMode === "neutral") return NEUTRAL_COLOR;
             if (this.colorMode === "family") return point._familyColor;
             if (this.colorMode === "class") return point._classColor;
             return point._typeColor;
@@ -435,12 +441,12 @@
 
         pointAlpha(point, selectedFamily = false) {
             let alpha = .58;
-            if (this.colorMode === "neutral") alpha = .56;
-            else if (this.colorMode === "family") alpha = .48;
+            if (this.colorMode === "neutral") alpha = .46;
+            else if (this.colorMode === "family") alpha = .42;
             else if (this.colorMode === "class") alpha = point._classAlpha;
             else alpha = point._typeAlpha;
             if (this.filteredPoints.length < 30000) alpha = Math.min(.88, alpha * 1.16);
-            return selectedFamily ? alpha * .38 : alpha;
+            return selectedFamily ? alpha * .24 : alpha;
         }
 
         draw() {
@@ -450,7 +456,7 @@
             this.drawGrid(ctx);
             if (!this.filteredPoints.length) {
                 ctx.fillStyle = "#77838f";
-                ctx.font = '600 13px "DM Sans", "Segoe UI", sans-serif';
+                ctx.font = '600 13px "IBM Plex Sans", "Segoe UI", sans-serif';
                 ctx.textAlign = "center"; ctx.textBaseline = "middle";
                 ctx.fillText("No matching sequences", this.cssWidth / 2, this.cssHeight / 2);
                 return;
@@ -472,7 +478,7 @@
                 for (const point of this.selectedFamilyPoints) {
                     const position = this.screenPosition(point);
                     if (position.x < -5 || position.y < -5 || position.x > this.cssWidth + 5 || position.y > this.cssHeight + 5) continue;
-                    ctx.fillStyle = this.colorMode === "neutral" ? "#0087dc" : this.pointColor(point);
+                    ctx.fillStyle = SELECTED_COLOR;
                     const familyRadius = Math.max(1.75, radius * 1.65);
                     ctx.fillRect(position.x - familyRadius, position.y - familyRadius, familyRadius * 2, familyRadius * 2);
                 }
@@ -483,7 +489,7 @@
             if (this.selected && this.filteredPoints.includes(this.selected)) {
                 this.drawMarker(ctx, this.selected, 6.5, "#ffffff", 3.6);
                 this.drawMarker(ctx, this.selected, 8.5, "#16384e", 2.1);
-                this.drawMarker(ctx, this.selected, 13, this.colorMode === "neutral" ? "#0087dc" : this.pointColor(this.selected), 1.6);
+                this.drawMarker(ctx, this.selected, 13, SELECTED_COLOR, 1.6);
             }
         }
 
@@ -498,7 +504,7 @@
             ctx.save();
             ctx.globalAlpha = .1;
             ctx.lineWidth = .75;
-            ctx.strokeStyle = this.pointColor(this.selected);
+            ctx.strokeStyle = SELECTED_COLOR;
             for (const neighbor of neighbors) {
                 const target = this.screenPosition(neighbor.point);
                 ctx.beginPath();
@@ -520,7 +526,7 @@
                     x: family.centroid_2d?.[0] ?? this.selected.x,
                     y: family.centroid_2d?.[1] ?? this.selected.y,
                     count: family.seed_count,
-                    color: this.colorMode === "neutral" ? "#0087dc" : this.pointColor(this.selected),
+                    color: SELECTED_COLOR,
                     selected: true
                 }];
             } else if (this.familyFilter !== "all") {
@@ -545,7 +551,7 @@
                 const position = this.screenPosition(anchor);
                 if (position.x < 80 || position.y < 95 || position.x > this.cssWidth - 80 || position.y > this.cssHeight - 54) continue;
                 const isSubtype = !anchor.accession;
-                ctx.font = `${isSubtype ? 650 : 580} ${isSubtype ? 9 : 8}px "DM Sans", "Segoe UI", sans-serif`;
+                ctx.font = `${isSubtype ? 650 : 580} ${isSubtype ? 9 : 8}px "IBM Plex Sans", "Segoe UI", sans-serif`;
                 const label = isSubtype ? `${anchor.label} · ${anchor.count.toLocaleString()}` : `${anchor.label} · ${anchor.accession}`;
                 const width = ctx.measureText(label).width + (anchor.selected ? 22 : (isSubtype ? 16 : 13));
                 const height = anchor.selected ? 24 : (isSubtype ? 22 : 19);
@@ -581,8 +587,8 @@
             ctx.save();
             const gradient = ctx.createRadialGradient(this.cssWidth * .5, this.cssHeight * .48, 0,
                 this.cssWidth * .5, this.cssHeight * .48, Math.max(this.cssWidth, this.cssHeight) * .62);
-            gradient.addColorStop(0, "rgba(230, 237, 241, .18)");
-            gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+            gradient.addColorStop(0, "rgba(255, 255, 255, .46)");
+            gradient.addColorStop(1, "rgba(244, 239, 228, 0)");
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, this.cssWidth, this.cssHeight);
             ctx.restore();
@@ -613,11 +619,11 @@
         renderLegend() {
             if (!this.data) return;
             if (this.colorMode === "neutral") {
-                this.legend.innerHTML = `<span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:#8798a4"></i>All Rfam Seed RNAs</span><span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:#0087dc"></i>Selected family</span>`;
+                this.legend.innerHTML = `<span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:${NEUTRAL_COLOR}"></i>All Rfam Seed RNAs</span><span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:${SELECTED_COLOR}"></i>Selected family</span>`;
                 return;
             }
             if (this.colorMode === "family") {
-                this.legend.innerHTML = `<span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:#6fa8c7"></i>Stable color per Rfam accession</span><span class="rfx-legend-item">Official Rfam 15.0 family annotation</span>`;
+                this.legend.innerHTML = `<span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:#2d4773"></i>Stable color per Rfam accession</span><span class="rfx-legend-item">Official Rfam 15.0 family annotation</span>`;
                 return;
             }
             if (this.colorMode === "class") {
@@ -892,8 +898,8 @@
             }
             ctx.strokeStyle = "#26313a"; ctx.lineWidth = 1; ctx.strokeRect(plotX - .5, plotY - .5, plotSize + 1, plotSize + 1);
             const ticks = oneBasedPositionTicks(Math.max(rows, columns));
-            ctx.fillStyle = "#445469"; ctx.strokeStyle = "#697789"; ctx.lineWidth = 1;
-            ctx.font = '10px "DM Sans", "Segoe UI", sans-serif';
+            ctx.fillStyle = "#516579"; ctx.strokeStyle = "#718294"; ctx.lineWidth = 1;
+            ctx.font = '10px "IBM Plex Sans", "Segoe UI", sans-serif';
             for (const tick of ticks) {
                 const x = plotX + tick.position / Math.max(1, columns - 1) * plotSize;
                 const y = plotY + tick.position / Math.max(1, rows - 1) * plotSize;
@@ -902,7 +908,7 @@
                 ctx.beginPath(); ctx.moveTo(plotX - 4, y); ctx.lineTo(plotX, y); ctx.stroke();
                 ctx.textAlign = "right"; ctx.textBaseline = "middle"; ctx.fillText(String(tick.label), plotX - 7, y);
             }
-            ctx.fillStyle = "#26384c"; ctx.font = '11px "DM Sans", "Segoe UI", sans-serif';
+            ctx.fillStyle = "#0a2540"; ctx.font = '11px "IBM Plex Sans", "Segoe UI", sans-serif';
             ctx.textAlign = "center"; ctx.textBaseline = "bottom";
             ctx.fillText("RNA position (5′ → 3′)", plotX + plotSize / 2, height - 2);
             ctx.save(); ctx.translate(10, plotY + plotSize / 2); ctx.rotate(-Math.PI / 2);
@@ -912,7 +918,7 @@
             HEAT_STOPS.forEach((color, index) => gradient.addColorStop(index / (HEAT_STOPS.length - 1), `rgb(${color[0]} ${color[1]} ${color[2]})`));
             ctx.fillStyle = gradient; ctx.fillRect(barX, barY, barWidth, plotSize);
             ctx.strokeStyle = "#26313a"; ctx.strokeRect(barX - .5, barY - .5, barWidth + 1, plotSize + 1);
-            ctx.fillStyle = "#445469"; ctx.font = '10px "DM Sans", "Segoe UI", sans-serif'; ctx.textAlign = "left";
+            ctx.fillStyle = "#516579"; ctx.font = '10px "IBM Plex Sans", "Segoe UI", sans-serif'; ctx.textAlign = "left";
             ctx.textBaseline = "top"; ctx.fillText(scoreLabel(maximum), barX + barWidth + 4, barY - 2);
             ctx.textBaseline = "bottom"; ctx.fillText("0", barX + barWidth + 4, barY + plotSize + 2);
             const tip = canvas.parentElement.querySelector("[data-rfx-attention-tip]");
@@ -944,13 +950,13 @@
             const ctx = canvas.getContext("2d"); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             const plotWidth = width - left - right, plotHeight = height - top - bottom, baseline = top + plotHeight;
             const maxValue = Math.max(...values, 1e-8);
-            ctx.clearRect(0, 0, width, height); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, width, height);
-            ctx.strokeStyle = "#e0e5e9"; ctx.lineWidth = 1;
+            ctx.clearRect(0, 0, width, height); ctx.fillStyle = "#fffdf9"; ctx.fillRect(0, 0, width, height);
+            ctx.strokeStyle = "rgba(10, 37, 64, .10)"; ctx.lineWidth = 1;
             for (let line = 0; line <= 2; line += 1) {
                 const y = top + plotHeight * line / 2;
                 ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(width - right, y); ctx.stroke();
                 const value = maxValue * (1 - line / 2);
-                ctx.fillStyle = "#647386"; ctx.font = '10px "DM Sans", "Segoe UI", sans-serif';
+                ctx.fillStyle = "#516579"; ctx.font = '10px "IBM Plex Sans", "Segoe UI", sans-serif';
                 ctx.textAlign = "right"; ctx.textBaseline = "middle"; ctx.fillText(scoreLabel(value), left - 6, y);
             }
             const cellWidth = plotWidth / Math.max(1, values.length);
@@ -973,7 +979,7 @@
             });
             ctx.strokeStyle = "#5d6977"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(left, baseline + .5); ctx.lineTo(width - right, baseline + .5); ctx.stroke();
             const ticks = oneBasedPositionTicks(values.length, Math.max(6, Math.floor(viewportWidth / 65)));
-            ctx.fillStyle = "#647386"; ctx.font = '10px "DM Sans", "Segoe UI", sans-serif'; ctx.textAlign = "center"; ctx.textBaseline = "top";
+            ctx.fillStyle = "#516579"; ctx.font = '10px "IBM Plex Sans", "Segoe UI", sans-serif'; ctx.textAlign = "center"; ctx.textBaseline = "top";
             for (const tick of ticks) {
                 const x = left + (tick.position + .5) * cellWidth;
                 ctx.beginPath(); ctx.moveTo(x, baseline); ctx.lineTo(x, baseline + 4); ctx.stroke();
