@@ -15,6 +15,13 @@ An immersive, single-page visualization of the representation space learned by R
 
 No installation or local server is required. Open the link in a modern browser to explore the complete interactive RNA landscape.
 
+## RiboGRAM resources
+
+- Source code and analysis scripts: [Zenodo record 23201637](https://zenodo.org/records/23201637)
+- Executable reproduction capsule: [Code Ocean capsule 2602506](https://codeocean.com/capsule/2602506/tree/v1)
+- RiboGRAM resource portal: [ultrarnalab.com/ribogram.php](https://www.ultrarnalab.com/ribogram.php)
+- RiboGRAM web server: [ultrarnalab.com/ribogram_usage.php](https://www.ultrarnalab.com/ribogram_usage.php)
+
 ## Deploy
 
 The included GitHub Actions workflow publishes the repository root to GitHub Pages whenever `main` is updated. For an organization site, use the repository name `RiboGRAM.github.io` and set **Settings → Pages → Source** to **GitHub Actions**.

@@ -9,7 +9,7 @@
   <meta property="og:description" content="An interactive atlas of the multi-scale grammar learned across non-coding RNA families.">
   <title>RiboGRAM Atlas · The landscape of non-coding RNA grammar</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/atlas.css?v=20261024">
+  <link rel="stylesheet" href="assets/atlas.css?v=20261024-2">
 </head>
 <body>
   <main
@@ -37,7 +37,10 @@
 
       <nav class="atlas-links" aria-label="Project links">
         <a href="https://www.biorxiv.org/content/10.64898/2026.10.12.758266v1" target="_blank" rel="noreferrer">Paper</a>
-        <a href="https://github.com/RiboGRAM" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="https://zenodo.org/records/23201637" target="_blank" rel="noreferrer">Zenodo</a>
+        <a href="https://codeocean.com/capsule/2602506/tree/v1" target="_blank" rel="noreferrer">Code Ocean</a>
+        <a href="https://www.ultrarnalab.com/ribogram.php" target="_blank" rel="noreferrer">Resource portal</a>
+        <a href="https://www.ultrarnalab.com/ribogram_usage.php" target="_blank" rel="noreferrer">Web server</a>
         <button type="button" data-atlas-about>About</button>
       </nav>
     </header>
@@ -88,8 +91,9 @@
         <label class="rfx-color-control">
           <span>Color by</span>
           <select data-rfx-color aria-label="Color points by">
+            <option value="subtype">RNA subtype</option>
+            <option value="class">Rfam class</option>
             <option value="neutral">All RNAs</option>
-            <option value="subtype">RNA type</option>
             <option value="family">Rfam family</option>
           </select>
         </label>
@@ -110,7 +114,7 @@
       <div class="rfx-inspector-empty">
         <span class="empty-orbit"><i></i></span>
         <strong>Select an RNA</strong>
-        <p>Inspect sequence-context scores and zero-shot base-pair signals learned by RiboGRAM.</p>
+        <p>Inspect position-resolved contextual-dependency scores and zero-shot base-pairing signals derived from RiboGRAM.</p>
       </div>
     </aside>
 
@@ -120,19 +124,25 @@
     <dialog class="atlas-about" data-about-dialog>
       <button class="atlas-dialog-close" type="button" data-about-close aria-label="Close">×</button>
       <p class="atlas-eyebrow">RIBOGRAM ATLAS</p>
-      <h2>One learned landscape for the non-coding RNA universe.</h2>
-      <p>Explore 92,781 sequences from all 4,178 Rfam 15.0 Seed families. Every point is positioned from a two-dimensional UMAP projection of RiboGRAM Layer-12 representations.</p>
+      <h2>A representation atlas of non-coding RNA sequence space.</h2>
+      <p>The atlas comprises 92,781 sequences from 4,178 Rfam 15.0 Seed families. Each point is positioned by a two-dimensional UMAP projection of the corresponding RiboGRAM Layer-12 representation.</p>
       <dl>
         <div><dt>Model</dt><dd>RiboGRAM</dd></div>
         <div><dt>Collection</dt><dd>Rfam 15.0 Seed</dd></div>
         <div><dt>Projection</dt><dd>Layer 12 · UMAP</dd></div>
       </dl>
       <a class="atlas-paper-button" href="https://www.biorxiv.org/content/10.64898/2026.10.12.758266v1" target="_blank" rel="noreferrer">Read the RiboGRAM preprint <span>↗</span></a>
+      <div class="atlas-resource-links" aria-label="RiboGRAM resources">
+        <a href="https://zenodo.org/records/23201637" target="_blank" rel="noreferrer"><span>Source code & analysis</span><strong>Zenodo ↗</strong></a>
+        <a href="https://codeocean.com/capsule/2602506/tree/v1" target="_blank" rel="noreferrer"><span>Executable capsule</span><strong>Code Ocean ↗</strong></a>
+        <a href="https://www.ultrarnalab.com/ribogram.php" target="_blank" rel="noreferrer"><span>Project resources</span><strong>RiboGRAM portal ↗</strong></a>
+        <a href="https://www.ultrarnalab.com/ribogram_usage.php" target="_blank" rel="noreferrer"><span>Interactive inference</span><strong>Web server ↗</strong></a>
+      </div>
       <p class="atlas-citation">Wang H., Chen Z., Huang H. et al. <em>RiboGRAM learns multi-scale non-coding RNA grammar for structural and regulatory inference.</em> bioRxiv (2026).</p>
     </dialog>
   </main>
 
   <noscript>RiboGRAM Atlas requires JavaScript to render the interactive map.</noscript>
-  <script src="assets/atlas.js?v=20261024" defer></script>
+  <script src="assets/atlas.js?v=20261024-2" defer></script>
 </body>
 </html>

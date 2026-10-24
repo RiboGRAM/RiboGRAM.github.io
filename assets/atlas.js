@@ -6,17 +6,39 @@
     // empty halo around the data on widescreen displays.
     const DEFAULT_ZOOM = 1.22;
 
-    const TYPE_COLORS = {
-        "C/D-box snoRNA": "#2487b8", "H/ACA-box snoRNA": "#e5a236",
-        "Spliceosomal RNA": "#d76b84", "Cis-regulatory RNA": "#347ac4",
-        "miRNA": "#d6618f", "snRNA": "#765ea8", "sRNA": "#a063ad",
-        "lncRNA": "#2695a3", "Gene": "#82909d", "CRISPR": "#d89023",
-        "Antisense RNA": "#c86d5a", "Leader": "#4b9972",
-        "Riboswitch": "#79a542", "Ribozyme": "#b3a03e",
-        "Thermoregulator": "#4a9a8b", "IRES": "#417fa9",
-        "Frameshift element": "#536fb0", "rRNA": "#7468b3",
-        "Antitoxin RNA": "#b06c4f", "Intron": "#b3844d", "tRNA": "#ca6e7c",
-        "Unclassified": "#8d99a4"
+    // Muted, publication-style palette. Gene subtypes use cool mineral and
+    // botanical tones; cis-regulatory elements use warmer greens and ochres;
+    // introns use a restrained violet. Per-subtype alpha keeps dense regions
+    // legible without turning the atlas into a saturated categorical plot.
+    const TYPE_STYLES = {
+        "miRNA": { color: "#c47d96", alpha: .58 },
+        "sRNA": { color: "#769b91", alpha: .54 },
+        "C/D-box snoRNA": { color: "#6f91ae", alpha: .60 },
+        "H/ACA-box snoRNA": { color: "#c6a066", alpha: .62 },
+        "lncRNA": { color: "#659a9b", alpha: .55 },
+        "Gene": { color: "#94a0a8", alpha: .50 },
+        "CRISPR": { color: "#b58460", alpha: .64 },
+        "Antisense RNA": { color: "#bc7f74", alpha: .58 },
+        "Ribozyme": { color: "#9b9767", alpha: .58 },
+        "snRNA": { color: "#8a80a5", alpha: .58 },
+        "Spliceosomal RNA": { color: "#a0789a", alpha: .58 },
+        "rRNA": { color: "#7889a6", alpha: .58 },
+        "Antitoxin RNA": { color: "#b08372", alpha: .58 },
+        "tRNA": { color: "#c58a82", alpha: .62 },
+        "Cis-regulatory RNA": { color: "#89a477", alpha: .62 },
+        "Leader": { color: "#6f9b84", alpha: .64 },
+        "Riboswitch": { color: "#a4a963", alpha: .68 },
+        "Thermoregulator": { color: "#63a09a", alpha: .64 },
+        "IRES": { color: "#6d8faa", alpha: .64 },
+        "Frameshift element": { color: "#8a86ae", alpha: .64 },
+        "Intron": { color: "#9b82a8", alpha: .74 },
+        "Unclassified": { color: "#8b98a1", alpha: .48 }
+    };
+    const TYPE_COLORS = Object.fromEntries(Object.entries(TYPE_STYLES).map(([key, value]) => [key, value.color]));
+    const CLASS_STYLES = {
+        "Gene": { color: "#7896aa", alpha: .50 },
+        "Cis-reg.": { color: "#a79766", alpha: .64 },
+        "Intron": { color: "#9b82a8", alpha: .74 }
     };
     // Matplotlib-like magma palette used by the released attention notebook.
     const HEAT_STOPS = [[0, 0, 4], [28, 16, 68], [79, 18, 123], [129, 37, 129],
@@ -36,7 +58,14 @@
         return Math.abs(hash * 137.508) % 360;
     }
 
-    function familyColor(value) { return `hsl(${stableHue(value).toFixed(1)} 48% 55%)`; }
+    function familyColor(value) { return `hsl(${stableHue(value).toFixed(1)} 32% 60%)`; }
+
+    function rfamClass(type) {
+        const value = String(type || "");
+        if (value.startsWith("Cis-reg")) return "Cis-reg.";
+        if (value.startsWith("Intron")) return "Intron";
+        return "Gene";
+    }
 
     function heatColor(t) {
         const value = clamp(t, 0, 1) * (HEAT_STOPS.length - 1);
@@ -112,7 +141,7 @@
             this.hovered = null;
             this.query = "";
             this.familyFilter = "all";
-            this.colorMode = "neutral";
+            this.colorMode = "subtype";
             this.zoom = DEFAULT_ZOOM;
             this.panX = 0;
             this.panY = 0;
@@ -176,7 +205,13 @@
                 const family = this.families.get(point.family);
                 point._family = family;
                 point._type = family ? family.subtype : "Unclassified";
-                point._typeColor = TYPE_COLORS[point._type] || familyColor(point._type);
+                point._class = family ? rfamClass(family.type) : "Gene";
+                const subtypeStyle = TYPE_STYLES[point._type] || TYPE_STYLES.Unclassified;
+                const classStyle = CLASS_STYLES[point._class] || CLASS_STYLES.Gene;
+                point._typeColor = subtypeStyle.color;
+                point._typeAlpha = subtypeStyle.alpha;
+                point._classColor = classStyle.color;
+                point._classAlpha = classStyle.alpha;
                 point._familyColor = familyColor(point.family);
                 point._search = [point.id, point.accession, point.family, family ? family.name : "",
                     family ? family.description : "", family ? family.type : "", family ? family.subtype : "",
@@ -202,7 +237,7 @@
                 .sort((left, right) => right.seed_count - left.seed_count)
                 .slice(0, 90)
                 .map((family) => ({
-                    label: family.name.replaceAll("_", " "),
+                    label: family.name,
                     accession: family.accession,
                     x: family.centroid_2d[0],
                     y: family.centroid_2d[1],
@@ -215,22 +250,28 @@
             const params = new URLSearchParams(window.location.hash.replace(/^#/, ""));
             const family = params.get("family");
             const sequence = params.get("sequence");
-            if (family && this.families.has(family)) {
-                this.familySelect.value = family;
-                this.familyFilter = family;
-                this.applyFilter();
-                this.fitPoints(this.filteredPoints);
-            }
+            this.search.value = "";
+            this.query = "";
+            this.familyFilter = family && this.families.has(family) ? family : "all";
+            this.familySelect.value = this.familyFilter;
+            this.applyFilter();
             if (sequence) {
                 const point = this.points.find((item) => item.id === sequence || item.accession === sequence);
                 if (point) {
                     // Keep enough of the atlas visible to preserve geographic context.  Tiny
                     // families previously zoomed all the way to individual pixels, which made
                     // deep links feel empty rather than like a place in a larger universe.
-                    if (!family) this.fitPoints(this.points.filter((item) => item.family === point.family), 2.65);
+                    if (this.familyFilter === "all") this.fitPoints(this.points.filter((item) => item.family === point.family), 2.65);
+                    else this.fitPoints(this.filteredPoints);
                     this.selectPoint(point, false);
+                    return;
                 }
             }
+            this.selectionRequest += 1;
+            this.selected = null;
+            this.selectedFamilyPoints = [];
+            this.root.classList.remove("is-inspector-open");
+            if (this.familyFilter === "all") this.resetView(); else this.fitPoints(this.filteredPoints);
         }
 
         bindControls() {
@@ -314,6 +355,7 @@
                 }
                 if (event.key === "Escape" && this.root.classList.contains("is-inspector-open")) this.closeInspector();
             });
+            window.addEventListener("hashchange", () => this.restoreURLState());
             this.root.querySelector("[data-inspector-backdrop]")?.addEventListener("click", () => this.closeInspector());
             this.root.querySelector("[data-legend-toggle]")?.addEventListener("click", (event) => {
                 const expanded = this.legendShell.classList.toggle("is-expanded");
@@ -387,7 +429,18 @@
         pointColor(point) {
             if (this.colorMode === "neutral") return "#8798a4";
             if (this.colorMode === "family") return point._familyColor;
+            if (this.colorMode === "class") return point._classColor;
             return point._typeColor;
+        }
+
+        pointAlpha(point, selectedFamily = false) {
+            let alpha = .58;
+            if (this.colorMode === "neutral") alpha = .56;
+            else if (this.colorMode === "family") alpha = .48;
+            else if (this.colorMode === "class") alpha = point._classAlpha;
+            else alpha = point._typeAlpha;
+            if (this.filteredPoints.length < 30000) alpha = Math.min(.88, alpha * 1.16);
+            return selectedFamily ? alpha * .38 : alpha;
         }
 
         draw() {
@@ -397,7 +450,7 @@
             this.drawGrid(ctx);
             if (!this.filteredPoints.length) {
                 ctx.fillStyle = "#77838f";
-                ctx.font = '600 13px ui-sans-serif, "Segoe UI", sans-serif';
+                ctx.font = '600 13px "DM Sans", "Segoe UI", sans-serif';
                 ctx.textAlign = "center"; ctx.textBaseline = "middle";
                 ctx.fillText("No matching sequences", this.cssWidth / 2, this.cssHeight / 2);
                 return;
@@ -406,16 +459,16 @@
                 : this.filteredPoints.length <= 200 ? 3
                     : this.zoom > 3.5 ? 2.35 : this.zoom > 1.8 ? 1.55 : this.filteredPoints.length > 30000 ? .72 : 1.35;
             const selectedFamily = this.selected && this.filteredPoints.includes(this.selected) ? this.selected.family : null;
-            ctx.globalAlpha = selectedFamily ? .24 : this.filteredPoints.length > 30000 ? .59 : .74;
             for (const point of this.filteredPoints) {
                 const position = this.screenPosition(point);
                 if (position.x < -5 || position.y < -5 || position.x > this.cssWidth + 5 || position.y > this.cssHeight + 5) continue;
+                ctx.globalAlpha = this.pointAlpha(point, Boolean(selectedFamily));
                 ctx.fillStyle = this.pointColor(point);
                 ctx.fillRect(position.x - radius, position.y - radius, radius * 2, radius * 2);
             }
             if (selectedFamily) {
                 this.drawNeighborhood(ctx);
-                ctx.globalAlpha = .92;
+                ctx.globalAlpha = .94;
                 for (const point of this.selectedFamilyPoints) {
                     const position = this.screenPosition(point);
                     if (position.x < -5 || position.y < -5 || position.x > this.cssWidth + 5 || position.y > this.cssHeight + 5) continue;
@@ -462,7 +515,7 @@
             if (this.selected) {
                 const family = this.selected._family;
                 anchors = [{
-                    label: family.name.replaceAll("_", " "),
+                    label: family.name,
                     accession: family.accession,
                     x: family.centroid_2d?.[0] ?? this.selected.x,
                     y: family.centroid_2d?.[1] ?? this.selected.y,
@@ -473,7 +526,7 @@
             } else if (this.familyFilter !== "all") {
                 const family = this.families.get(this.familyFilter);
                 anchors = family && Array.isArray(family.centroid_2d) ? [{
-                    label: family.name.replaceAll("_", " "),
+                    label: family.name,
                     accession: family.accession,
                     x: family.centroid_2d[0], y: family.centroid_2d[1], count: family.seed_count,
                     color: TYPE_COLORS[family.subtype] || familyColor(family.accession)
@@ -492,7 +545,7 @@
                 const position = this.screenPosition(anchor);
                 if (position.x < 80 || position.y < 95 || position.x > this.cssWidth - 80 || position.y > this.cssHeight - 54) continue;
                 const isSubtype = !anchor.accession;
-                ctx.font = `${isSubtype ? 650 : 580} ${isSubtype ? 9 : 8}px ui-sans-serif, Segoe UI, sans-serif`;
+                ctx.font = `${isSubtype ? 650 : 580} ${isSubtype ? 9 : 8}px "DM Sans", "Segoe UI", sans-serif`;
                 const label = isSubtype ? `${anchor.label} · ${anchor.count.toLocaleString()}` : `${anchor.label} · ${anchor.accession}`;
                 const width = ctx.measureText(label).width + (anchor.selected ? 22 : (isSubtype ? 16 : 13));
                 const height = anchor.selected ? 24 : (isSubtype ? 22 : 19);
@@ -567,8 +620,29 @@
                 this.legend.innerHTML = `<span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:#6fa8c7"></i>Stable color per Rfam accession</span><span class="rfx-legend-item">Official Rfam 15.0 family annotation</span>`;
                 return;
             }
-            const labels = [...new Set(this.data.families.map((family) => family.subtype))].sort();
-            this.legend.innerHTML = labels.map((label) => `<span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:${TYPE_COLORS[label] || familyColor(label)}"></i>${escapeHTML(label)}</span>`).join("");
+            if (this.colorMode === "class") {
+                this.legend.innerHTML = Object.entries(CLASS_STYLES).map(([label, style]) =>
+                    `<span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:${style.color};opacity:${style.alpha}"></i>${escapeHTML(label === "Gene" ? "Gene · ncRNA" : label)}</span>`
+                ).join("");
+                return;
+            }
+            const subtypeInfo = new Map();
+            for (const family of this.data.families) {
+                const current = subtypeInfo.get(family.subtype) || { label: family.subtype, className: rfamClass(family.type), count: 0 };
+                current.count += Number(family.seed_count) || 0;
+                subtypeInfo.set(family.subtype, current);
+            }
+            const groups = { "Gene": [], "Cis-reg.": [], "Intron": [] };
+            for (const item of subtypeInfo.values()) (groups[item.className] || groups.Gene).push(item);
+            for (const items of Object.values(groups)) items.sort((left, right) => right.count - left.count);
+            this.legend.innerHTML = Object.entries(groups).map(([className, items]) => {
+                const heading = className === "Gene" ? "Gene · ncRNA subtypes" : className;
+                const entries = items.map((item) => {
+                    const style = TYPE_STYLES[item.label] || TYPE_STYLES.Unclassified;
+                    return `<span class="rfx-legend-item"><i class="rfx-legend-dot" style="background:${style.color};opacity:${style.alpha}"></i>${escapeHTML(item.label)}</span>`;
+                }).join("");
+                return `<section class="rfx-legend-group"><strong>${escapeHTML(heading)}</strong><div>${entries}</div></section>`;
+            }).join("");
         }
 
         nearestPoint(x, y, radius = 12) {
@@ -695,7 +769,7 @@
             } catch (_error) {
                 if (requestId !== this.selectionRequest) return;
                 const target = this.inspector.querySelector("[data-rfx-analysis]");
-                if (target) target.innerHTML = `<div class="rfx-analysis-unavailable"><strong>Model interpretation unavailable</strong><span>The verified detail bundle for this sequence could not be loaded.</span></div>`;
+                if (target) target.innerHTML = `<div class="rfx-analysis-unavailable"><strong>Sequence analyses unavailable</strong><span>The released per-sequence analysis record could not be loaded.</span></div>`;
             }
         }
 
@@ -742,12 +816,12 @@
             const centroidDistance = Math.hypot(point.x - centroid[0], point.y - centroid[1]);
             const compositionBars = bases.map((item) => `<i style="width:${(item.count / Math.max(1, sequence.length) * 100).toFixed(2)}%;background:${BASE_COLORS[item.base]}"></i>`).join("");
             const compositionLabels = bases.map((item) => `<span style="color:${BASE_COLORS[item.base]}">${item.base} ${(item.count / Math.max(1, sequence.length) * 100).toFixed(1)}%</span>`).join("");
-            this.inspector.innerHTML = `<div class="rfx-inspector-head"><p class="rfx-kicker">Rfam Seed · ${escapeHTML(point.id)}</p><div class="rfx-inspector-title-row"><div><h3>${escapeHTML(family.name.replaceAll("_", " "))}</h3><div class="rfx-accession">${escapeHTML(point.family)} · ${escapeHTML(point.accession)}</div></div><div class="rfx-head-actions"><button type="button" class="rfx-copy" data-rfx-copy>Copy RNA</button><button type="button" class="rfx-drawer-close" data-rfx-close aria-label="Close sequence details">×</button></div></div><div class="rfx-tag-row"><span class="rfx-tag" style="--tag-color:${point._typeColor}">${escapeHTML(family.subtype)}</span><span class="rfx-tag" style="--tag-color:${point._familyColor}">${point.length.toLocaleString()} nt</span><span class="rfx-tag" style="--tag-color:#1a9a7a">${family.seed_count.toLocaleString()} family seeds</span></div></div><div class="rfx-inspector-body"><div data-rfx-analysis><div class="rfx-analysis-loading"><i></i><span>Loading model interpretation…</span></div></div><details class="rfx-disclosure" open><summary>Sequence & annotation <span>5′ → 3′</span></summary><div class="rfx-disclosure-body"><div class="rfx-annotation-grid"><div class="rfx-annotation"><span>Rfam family</span><strong title="${escapeHTML(family.description)}">${escapeHTML(point.family)} · ${escapeHTML(family.name)}</strong><small>${escapeHTML(family.description)}</small></div><div class="rfx-annotation"><span>ncRNA category</span><strong>${escapeHTML(family.subtype)}</strong><small>${escapeHTML(family.type)}</small></div><div class="rfx-annotation"><span>Source sequence</span><strong title="${escapeHTML(point.accession)}">${escapeHTML(point.accession)}</strong><small>Official Rfam 15.0 Seed accession</small></div><div class="rfx-annotation"><span>Rfam clan</span><strong>${escapeHTML(clan)}</strong><small>${escapeHTML(point.id)}</small></div></div>${windowNote}<pre class="rfx-sequence">${escapeHTML(formatSequence(point.sequence))}</pre><div class="rfx-composition"><div class="rfx-composition-bar">${compositionBars}</div><div class="rfx-composition-labels">${compositionLabels}</div></div></div></details><details class="rfx-disclosure"><summary>Representation coordinates <span>Layer 12 · UMAP</span></summary><div class="rfx-disclosure-body"><div class="rfx-space-metrics"><div><span>UMAP 1</span><strong>${point.x.toFixed(3)}</strong></div><div><span>UMAP 2</span><strong>${point.y.toFixed(3)}</strong></div><div><span>To centroid</span><strong>${centroidDistance.toFixed(3)}</strong></div></div></div></details><a class="rfx-rfam-link" href="https://rfam.org/family/${encodeURIComponent(point.family)}" target="_blank" rel="noreferrer"><span>Open ${escapeHTML(point.family)} in Rfam</span><span>↗</span></a></div>`;
+            this.inspector.innerHTML = `<div class="rfx-inspector-head"><p class="rfx-kicker">Rfam Seed sequence · ${escapeHTML(point.id)}</p><div class="rfx-inspector-title-row"><div><h3>${escapeHTML(family.name)}</h3><div class="rfx-accession">${escapeHTML(point.family)} · ${escapeHTML(point.accession)}</div></div><div class="rfx-head-actions"><button type="button" class="rfx-copy" data-rfx-copy>Copy sequence</button><button type="button" class="rfx-drawer-close" data-rfx-close aria-label="Close sequence details">×</button></div></div><div class="rfx-tag-row"><span class="rfx-tag" style="--tag-color:${point._typeColor}">${escapeHTML(family.subtype)}</span><span class="rfx-tag" style="--tag-color:${point._classColor}">${escapeHTML(point._class)} class</span><span class="rfx-tag" style="--tag-color:#81919c">${point.length.toLocaleString()} nt</span><span class="rfx-tag" style="--tag-color:#6e9a86">${family.seed_count.toLocaleString()} Seed sequences</span></div></div><div class="rfx-inspector-body"><div data-rfx-analysis><div class="rfx-analysis-loading"><i></i><span>Loading sequence analyses…</span></div></div><details class="rfx-disclosure" open><summary>Sequence & annotation <span>5′ → 3′</span></summary><div class="rfx-disclosure-body"><div class="rfx-annotation-grid"><div class="rfx-annotation"><span>Rfam family</span><strong title="${escapeHTML(family.description)}">${escapeHTML(point.family)} · ${escapeHTML(family.name)}</strong><small>${escapeHTML(family.description)}</small></div><div class="rfx-annotation"><span>ncRNA category</span><strong>${escapeHTML(family.subtype)}</strong><small>${escapeHTML(family.type)}</small></div><div class="rfx-annotation"><span>Source sequence</span><strong title="${escapeHTML(point.accession)}">${escapeHTML(point.accession)}</strong><small>Official Rfam 15.0 Seed accession</small></div><div class="rfx-annotation"><span>Rfam clan</span><strong>${escapeHTML(clan)}</strong><small>${escapeHTML(point.id)}</small></div></div>${windowNote}<pre class="rfx-sequence">${escapeHTML(formatSequence(point.sequence))}</pre><div class="rfx-composition"><div class="rfx-composition-bar">${compositionBars}</div><div class="rfx-composition-labels">${compositionLabels}</div></div></div></details><details class="rfx-disclosure"><summary>Representation coordinates <span>Layer 12 · UMAP</span></summary><div class="rfx-disclosure-body"><div class="rfx-space-metrics"><div><span>UMAP 1</span><strong>${point.x.toFixed(3)}</strong></div><div><span>UMAP 2</span><strong>${point.y.toFixed(3)}</strong></div><div><span>To centroid</span><strong>${centroidDistance.toFixed(3)}</strong></div></div></div></details><a class="rfx-rfam-link" href="https://rfam.org/family/${encodeURIComponent(point.family)}" target="_blank" rel="noreferrer"><span>Open ${escapeHTML(point.family)} in Rfam</span><span>↗</span></a></div>`;
             this.inspector.scrollTop = 0;
             this.inspector.querySelector("[data-rfx-copy]").addEventListener("click", async (event) => {
                 await navigator.clipboard.writeText(point.sequence);
                 const button = event.currentTarget; button.textContent = "Copied";
-                window.setTimeout(() => { button.textContent = "Copy RNA"; }, 1200);
+                window.setTimeout(() => { button.textContent = "Copy sequence"; }, 1200);
             });
             this.inspector.querySelector("[data-rfx-close]").addEventListener("click", () => this.closeInspector());
         }
@@ -767,7 +841,7 @@
                 const leftBase = analysisSequence[left - 1] || "N", rightBase = analysisSequence[right - 1] || "N";
                 return `<li><span>${leftBase}${left}—${rightBase}${right}</span><strong>${Number(pair[2]).toFixed(3)}</strong></li>`;
             }).join("");
-            target.innerHTML = `<section class="rfx-interpretation-intro"><p class="rfx-kicker">Model interpretation</p><h4>What RiboGRAM sees in this RNA</h4><p>Position-resolved dependency and unsupervised pairing signals from the released RiboGRAM backbone.</p><div class="rfx-model-metrics"><div><span>Mean context</span><strong>${Number(context.mean || 0).toFixed(3)}</strong></div><div><span>Maximum</span><strong>${Number(context.maximum || context.scale_max || 0).toFixed(3)}</strong></div><div><span>Predicted pairs</span><strong>${Number(attention.predicted_pair_count || pairs.length).toLocaleString()}</strong></div><div><span>Top APC</span><strong>${strongest ? Number(strongest[2]).toFixed(3) : "—"}</strong></div></div></section><section class="rfx-analysis-section"><div class="rfx-analysis-heading"><div><p>01 · Sequence context</p><h4>Context dependency score</h4></div><span>Position resolved</span></div><p class="rfx-analysis-note">Higher values mark nucleotides whose surrounding sequence changes the model representation most strongly.</p><div class="rfx-chart-frame rfx-context-frame"><canvas data-rfx-context aria-label="Position-resolved sequence contextual dependency scores"></canvas><span class="rfx-chart-tip" data-rfx-context-tip hidden></span></div></section><section class="rfx-analysis-section"><div class="rfx-analysis-heading"><div><p>02 · Zero-shot structure</p><h4>Base-pair signal map</h4></div><span>L12 · H20 · APC ≥ ${Number(attention.pair_threshold || .4).toFixed(1)}</span></div><p class="rfx-analysis-note">Symmetrized, APC-corrected attention. Bright cells indicate pair-like signals discovered without secondary-structure labels.</p><div class="rfx-chart-frame rfx-attention-frame"><canvas data-rfx-attention aria-label="Zero-shot base-pair signal map"></canvas><span class="rfx-chart-tip" data-rfx-attention-tip hidden></span></div>${pairList ? `<ol class="rfx-pair-list">${pairList}</ol>` : `<p class="rfx-no-pairs">No pair exceeded the released threshold.</p>`}</section>`;
+            target.innerHTML = `<section class="rfx-interpretation-intro"><p class="rfx-kicker">RiboGRAM-derived analyses</p><h4>Contextual dependency and zero-shot pairing</h4><p>Position-resolved contextual dependency and zero-shot base-pairing signals derived from the pretrained RiboGRAM model.</p><div class="rfx-model-metrics"><div><span>Mean dependency</span><strong>${Number(context.mean || 0).toFixed(3)}</strong></div><div><span>Maximum dependency</span><strong>${Number(context.maximum || context.scale_max || 0).toFixed(3)}</strong></div><div><span>Candidate pairs</span><strong>${Number(attention.predicted_pair_count || pairs.length).toLocaleString()}</strong></div><div><span>Maximum APC score</span><strong>${strongest ? Number(strongest[2]).toFixed(3) : "—"}</strong></div></div></section><section class="rfx-analysis-section"><div class="rfx-analysis-heading"><div><p>01 · Sequence contextual dependency</p><h4>Per-nucleotide dependency score</h4></div><span>Position-resolved</span></div><p class="rfx-analysis-note">Per-nucleotide sensitivity of the learned representation to perturbations in local sequence context.</p><div class="rfx-chart-frame rfx-context-frame"><canvas data-rfx-context aria-label="Position-resolved sequence contextual dependency scores"></canvas><span class="rfx-chart-tip" data-rfx-context-tip hidden></span></div></section><section class="rfx-analysis-section"><div class="rfx-analysis-heading"><div><p>02 · Zero-shot base pairing</p><h4>APC-corrected attention map</h4></div><span>L12 · H20 · APC ≥ ${Number(attention.pair_threshold || .4).toFixed(1)}</span></div><p class="rfx-analysis-note">Symmetrized, APC-corrected Layer-12 Head-20 attention. Cells above the indicated threshold denote candidate base-pairing signals obtained without structure supervision.</p><div class="rfx-chart-frame rfx-attention-frame"><canvas data-rfx-attention aria-label="Zero-shot base-pair signal map"></canvas><span class="rfx-chart-tip" data-rfx-attention-tip hidden></span></div>${pairList ? `<ol class="rfx-pair-list">${pairList}</ol>` : `<p class="rfx-no-pairs">No candidate pair exceeded the specified APC threshold.</p>`}</section>`;
             requestAnimationFrame(() => {
                 this.drawContext(target.querySelector("[data-rfx-context]"), analysisSequence, contextValues);
                 this.drawAttention(target.querySelector("[data-rfx-attention]"), attention);
@@ -819,7 +893,7 @@
             ctx.strokeStyle = "#26313a"; ctx.lineWidth = 1; ctx.strokeRect(plotX - .5, plotY - .5, plotSize + 1, plotSize + 1);
             const ticks = oneBasedPositionTicks(Math.max(rows, columns));
             ctx.fillStyle = "#445469"; ctx.strokeStyle = "#697789"; ctx.lineWidth = 1;
-            ctx.font = '9px Geneva, "Segoe UI", sans-serif';
+            ctx.font = '10px "DM Sans", "Segoe UI", sans-serif';
             for (const tick of ticks) {
                 const x = plotX + tick.position / Math.max(1, columns - 1) * plotSize;
                 const y = plotY + tick.position / Math.max(1, rows - 1) * plotSize;
@@ -828,7 +902,7 @@
                 ctx.beginPath(); ctx.moveTo(plotX - 4, y); ctx.lineTo(plotX, y); ctx.stroke();
                 ctx.textAlign = "right"; ctx.textBaseline = "middle"; ctx.fillText(String(tick.label), plotX - 7, y);
             }
-            ctx.fillStyle = "#26384c"; ctx.font = '10px Geneva, "Segoe UI", sans-serif';
+            ctx.fillStyle = "#26384c"; ctx.font = '11px "DM Sans", "Segoe UI", sans-serif';
             ctx.textAlign = "center"; ctx.textBaseline = "bottom";
             ctx.fillText("RNA position (5′ → 3′)", plotX + plotSize / 2, height - 2);
             ctx.save(); ctx.translate(10, plotY + plotSize / 2); ctx.rotate(-Math.PI / 2);
@@ -838,7 +912,7 @@
             HEAT_STOPS.forEach((color, index) => gradient.addColorStop(index / (HEAT_STOPS.length - 1), `rgb(${color[0]} ${color[1]} ${color[2]})`));
             ctx.fillStyle = gradient; ctx.fillRect(barX, barY, barWidth, plotSize);
             ctx.strokeStyle = "#26313a"; ctx.strokeRect(barX - .5, barY - .5, barWidth + 1, plotSize + 1);
-            ctx.fillStyle = "#445469"; ctx.font = '9px Geneva, "Segoe UI", sans-serif'; ctx.textAlign = "left";
+            ctx.fillStyle = "#445469"; ctx.font = '10px "DM Sans", "Segoe UI", sans-serif'; ctx.textAlign = "left";
             ctx.textBaseline = "top"; ctx.fillText(scoreLabel(maximum), barX + barWidth + 4, barY - 2);
             ctx.textBaseline = "bottom"; ctx.fillText("0", barX + barWidth + 4, barY + plotSize + 2);
             const tip = canvas.parentElement.querySelector("[data-rfx-attention-tip]");
@@ -876,7 +950,7 @@
                 const y = top + plotHeight * line / 2;
                 ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(width - right, y); ctx.stroke();
                 const value = maxValue * (1 - line / 2);
-                ctx.fillStyle = "#647386"; ctx.font = '9px Geneva, "Segoe UI", sans-serif';
+                ctx.fillStyle = "#647386"; ctx.font = '10px "DM Sans", "Segoe UI", sans-serif';
                 ctx.textAlign = "right"; ctx.textBaseline = "middle"; ctx.fillText(scoreLabel(value), left - 6, y);
             }
             const cellWidth = plotWidth / Math.max(1, values.length);
@@ -899,7 +973,7 @@
             });
             ctx.strokeStyle = "#5d6977"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(left, baseline + .5); ctx.lineTo(width - right, baseline + .5); ctx.stroke();
             const ticks = oneBasedPositionTicks(values.length, Math.max(6, Math.floor(viewportWidth / 65)));
-            ctx.fillStyle = "#647386"; ctx.font = '9px Geneva, "Segoe UI", sans-serif'; ctx.textAlign = "center"; ctx.textBaseline = "top";
+            ctx.fillStyle = "#647386"; ctx.font = '10px "DM Sans", "Segoe UI", sans-serif'; ctx.textAlign = "center"; ctx.textBaseline = "top";
             for (const tick of ticks) {
                 const x = left + (tick.position + .5) * cellWidth;
                 ctx.beginPath(); ctx.moveTo(x, baseline); ctx.lineTo(x, baseline + 4); ctx.stroke();

@@ -1,3 +1,19 @@
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("fonts/dm-sans-latin-variable.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Source Serif 4";
+  font-style: normal;
+  font-weight: 500 650;
+  font-display: swap;
+  src: url("fonts/source-serif-4-latin-variable.woff2") format("woff2");
+}
+
 :root {
   color-scheme: light;
   --page: #f6f8f9;
@@ -11,7 +27,7 @@
   --blue-soft: #eaf5fb;
   --panel-width: clamp(500px, 37vw, 600px);
   --shadow: 0 12px 38px rgba(24, 48, 64, .1);
-  font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "DM Sans", "Segoe UI Variable", "Segoe UI", ui-sans-serif, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -166,7 +182,7 @@ button { color: inherit; }
 }
 
 .atlas-brand-copy strong {
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: "Source Serif 4", Georgia, serif;
   font-size: 27px;
   font-weight: 500;
   letter-spacing: -.035em;
@@ -186,7 +202,7 @@ button { color: inherit; }
   bottom: 25px;
   display: flex;
   align-items: center;
-  gap: 19px;
+  gap: 15px;
   padding: 7px 2px;
   border: 0;
   background: transparent;
@@ -316,7 +332,7 @@ button { color: inherit; }
 
 .rfx-control > span {
   color: #95a0a8;
-  font-size: 7px;
+  font-size: 8px;
   font-weight: 700;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -345,7 +361,7 @@ button { color: inherit; }
   left: 27px;
   bottom: 24px;
   z-index: 44;
-  width: 264px;
+  width: 300px;
   padding: 12px 13px;
   border: 1px solid rgba(208, 217, 222, .86);
   border-radius: 10px;
@@ -388,7 +404,7 @@ button { color: inherit; }
 }
 
 .rfx-color-control select {
-  width: 73px;
+  width: 90px;
   padding: 0;
   border: 0;
   outline: 0;
@@ -401,12 +417,12 @@ button { color: inherit; }
 
 .rfx-legend {
   display: none;
-  max-height: 260px;
+  max-height: 355px;
   margin-top: 10px;
   padding: 10px 2px 3px;
   overflow: auto;
   border-top: 1px solid var(--line);
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 8px 10px;
 }
 
@@ -418,7 +434,7 @@ button { color: inherit; }
   gap: 6px;
   min-width: 0;
   color: var(--muted);
-  font-size: 8px;
+  font-size: 9px;
   line-height: 1.25;
 }
 
@@ -427,6 +443,27 @@ button { color: inherit; }
   height: 6px;
   flex: 0 0 auto;
   border-radius: 50%;
+}
+
+.rfx-legend-group + .rfx-legend-group {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.rfx-legend-group > strong {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--ink);
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: .035em;
+}
+
+.rfx-legend-group > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px 10px;
 }
 
 .atlas-legend-toggle {
@@ -581,7 +618,7 @@ button { color: inherit; }
 
 .rfx-inspector-empty strong {
   margin-top: 17px;
-  font-family: "Iowan Old Style", Georgia, serif;
+  font-family: "Source Serif 4", Georgia, serif;
   color: var(--ink);
   font-size: 22px;
   font-weight: 500;
@@ -607,7 +644,7 @@ button { color: inherit; }
 .rfx-kicker {
   margin: 0 0 7px;
   color: var(--faint);
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 720;
   letter-spacing: .13em;
   text-transform: uppercase;
@@ -622,7 +659,7 @@ button { color: inherit; }
 
 .rfx-inspector-title-row h3 {
   margin: 0;
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-family: "Source Serif 4", Georgia, serif;
   color: var(--ink);
   font-size: 31px;
   font-weight: 500;
@@ -635,7 +672,8 @@ button { color: inherit; }
   margin-top: 5px;
   overflow: hidden;
   color: var(--muted);
-  font: 9px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
+  font: 500 10px/1.45 "DM Sans", "Segoe UI", sans-serif;
+  font-variant-numeric: tabular-nums;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -654,7 +692,7 @@ button { color: inherit; }
 .rfx-copy {
   padding: 0 10px;
   border-radius: 7px;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .rfx-drawer-close {
@@ -684,7 +722,7 @@ button { color: inherit; }
   border-radius: 999px;
   color: var(--muted);
   background: #fff;
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 630;
 }
 
@@ -712,7 +750,7 @@ button { color: inherit; }
   border-radius: 10px;
   color: var(--muted);
   background: #fff;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .rfx-analysis-loading i {
@@ -731,10 +769,10 @@ button { color: inherit; }
 
 .rfx-interpretation-intro h4 {
   margin: 0;
-  font-family: "Iowan Old Style", Georgia, serif;
+  font-family: "Source Serif 4", Georgia, serif;
   color: var(--ink);
-  font-size: 24px;
-  font-weight: 500;
+  font-size: 26px;
+  font-weight: 560;
   letter-spacing: -.02em;
 }
 
@@ -742,8 +780,8 @@ button { color: inherit; }
   max-width: 470px;
   margin: 7px 0 0;
   color: var(--muted);
-  font-size: 10px;
-  line-height: 1.55;
+  font-size: 11px;
+  line-height: 1.6;
 }
 
 .rfx-model-metrics {
@@ -769,7 +807,7 @@ button { color: inherit; }
 .rfx-space-metrics span {
   display: block;
   color: var(--faint);
-  font-size: 7px;
+  font-size: 8px;
   font-weight: 700;
   letter-spacing: .08em;
   text-transform: uppercase;
@@ -779,7 +817,8 @@ button { color: inherit; }
   display: block;
   margin-top: 4px;
   color: var(--ink);
-  font: 600 15px/1.1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  font: 650 16px/1.15 "DM Sans", "Segoe UI", sans-serif;
+  font-variant-numeric: tabular-nums;
 }
 
 .rfx-analysis-section {
@@ -798,7 +837,7 @@ button { color: inherit; }
 .rfx-analysis-heading p {
   margin: 0 0 4px;
   color: var(--blue);
-  font-size: 7px;
+  font-size: 8px;
   font-weight: 750;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -807,21 +846,21 @@ button { color: inherit; }
 .rfx-analysis-heading h4 {
   margin: 0;
   color: var(--ink);
-  font-size: 15px;
-  font-weight: 650;
+  font-size: 16px;
+  font-weight: 660;
 }
 
 .rfx-analysis-heading > span {
   color: var(--faint);
-  font: 8px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
+  font: 500 9px/1.4 "DM Sans", "Segoe UI", sans-serif;
   text-align: right;
 }
 
 .rfx-analysis-note {
   margin: 7px 0 11px;
   color: var(--muted);
-  font-size: 9px;
-  line-height: 1.5;
+  font-size: 10px;
+  line-height: 1.55;
 }
 
 .rfx-chart-frame {
@@ -853,7 +892,8 @@ button { color: inherit; }
   border-radius: 5px;
   color: #fff;
   background: rgba(20, 45, 67, .9);
-  font: 8px/1.2 ui-monospace, SFMono-Regular, Consolas, monospace;
+  font: 600 9px/1.2 "DM Sans", "Segoe UI", sans-serif;
+  font-variant-numeric: tabular-nums;
   pointer-events: none;
 }
 
@@ -876,7 +916,8 @@ button { color: inherit; }
   border-radius: 6px;
   color: var(--muted);
   background: #fff;
-  font: 8px/1.2 ui-monospace, SFMono-Regular, Consolas, monospace;
+  font: 500 9px/1.25 "DM Sans", "Segoe UI", sans-serif;
+  font-variant-numeric: tabular-nums;
 }
 
 .rfx-pair-list strong { color: var(--ink); }
@@ -900,7 +941,7 @@ button { color: inherit; }
   gap: 12px;
   padding: 0 12px;
   color: var(--ink);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 630;
   cursor: pointer;
   list-style: none;
@@ -909,7 +950,7 @@ button { color: inherit; }
 .rfx-disclosure summary::-webkit-details-marker { display: none; }
 .rfx-disclosure summary::before { color: var(--blue); content: "+"; font-size: 15px; font-weight: 400; }
 .rfx-disclosure[open] summary::before { content: "−"; }
-.rfx-disclosure summary > span { margin-left: auto; color: var(--faint); font: 8px/1 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.rfx-disclosure summary > span { margin-left: auto; color: var(--faint); font: 500 9px/1 "DM Sans", "Segoe UI", sans-serif; }
 
 .rfx-disclosure-body {
   padding: 13px;
@@ -932,7 +973,7 @@ button { color: inherit; }
 .rfx-annotation span {
   display: block;
   color: var(--faint);
-  font-size: 7px;
+  font-size: 8px;
   font-weight: 700;
   letter-spacing: .08em;
   text-transform: uppercase;
@@ -946,14 +987,14 @@ button { color: inherit; }
   white-space: nowrap;
 }
 
-.rfx-annotation strong { margin-top: 4px; color: var(--ink); font-size: 9px; }
-.rfx-annotation small { margin-top: 2px; color: var(--muted); font-size: 8px; }
+.rfx-annotation strong { margin-top: 4px; color: var(--ink); font-size: 10px; }
+.rfx-annotation small { margin-top: 2px; color: var(--muted); font-size: 9px; }
 
 .rfx-window-note {
   display: block;
   margin-top: 10px;
   color: #9a6d25;
-  font-size: 8px;
+  font-size: 9px;
 }
 
 .rfx-sequence {
@@ -964,7 +1005,7 @@ button { color: inherit; }
   border-radius: 7px;
   color: #2f586e;
   background: #fbfcfc;
-  font: 9px/1.7 ui-monospace, SFMono-Regular, Consolas, monospace;
+  font: 10px/1.7 ui-monospace, SFMono-Regular, Consolas, monospace;
   white-space: pre-wrap;
   word-break: break-all;
 }
@@ -984,7 +1025,8 @@ button { color: inherit; }
   justify-content: space-between;
   gap: 8px;
   margin-top: 6px;
-  font: 8px/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  font: 600 9px/1 "DM Sans", "Segoe UI", sans-serif;
+  font-variant-numeric: tabular-nums;
 }
 
 .rfx-space-metrics {
@@ -997,7 +1039,7 @@ button { color: inherit; }
 
 .rfx-space-metrics div { padding: 11px; border-right: 1px solid var(--line); }
 .rfx-space-metrics div:last-child { border-right: 0; }
-.rfx-space-metrics strong { display: block; margin-top: 4px; color: var(--ink); font: 600 12px/1 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.rfx-space-metrics strong { display: block; margin-top: 4px; color: var(--ink); font: 650 13px/1 "DM Sans", "Segoe UI", sans-serif; font-variant-numeric: tabular-nums; }
 
 .rfx-rfam-link {
   display: flex;
@@ -1009,7 +1051,7 @@ button { color: inherit; }
   border-radius: 8px;
   color: var(--ink);
   background: #fff;
-  font-size: 9px;
+  font-size: 10px;
   text-decoration: none;
 }
 
@@ -1036,7 +1078,9 @@ button { color: inherit; }
 
 .atlas-about {
   width: min(520px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
   padding: 30px;
+  overflow: auto;
   border: 1px solid var(--line-strong);
   border-radius: 12px;
   color: var(--ink);
@@ -1065,7 +1109,7 @@ button { color: inherit; }
 .atlas-about h2 {
   max-width: 410px;
   margin: 0;
-  font-family: "Iowan Old Style", Georgia, serif;
+  font-family: "Source Serif 4", Georgia, serif;
   font-size: 30px;
   font-weight: 500;
   letter-spacing: -.03em;
@@ -1082,6 +1126,29 @@ button { color: inherit; }
 
 .atlas-paper-button { display: flex; align-items: center; justify-content: space-between; padding: 12px 13px; border-radius: 8px; color: #fff; background: var(--ink); font-size: 10px; text-decoration: none; }
 .atlas-paper-button:hover { background: #21455e; }
+
+.atlas-resource-links {
+  display: grid;
+  margin-top: 10px;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+.atlas-resource-links a {
+  display: grid;
+  gap: 4px;
+  padding: 10px 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  background: #fff;
+  font-size: 9px;
+  text-decoration: none;
+}
+
+.atlas-resource-links a:hover { border-color: #a9bbc6; background: #fbfdfe; }
+
+.atlas-resource-links strong { color: var(--ink); font-size: 10px; font-weight: 650; }
 .atlas-citation { margin: 15px 0 0; color: var(--faint); font-size: 8px; line-height: 1.55; }
 
 @media (max-width: 1180px) {
