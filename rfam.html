@@ -9,7 +9,7 @@
   <meta property="og:description" content="An interactive atlas of the multi-scale grammar learned across non-coding RNA families.">
   <title>RiboGRAM Atlas · The landscape of non-coding RNA grammar</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/atlas.css?v=20261026-1">
+  <link rel="stylesheet" href="assets/atlas.css?v=20261026-2">
 </head>
 <body>
   <main
@@ -125,11 +125,12 @@
       <button class="atlas-dialog-close" type="button" data-about-close aria-label="Close">×</button>
       <p class="atlas-eyebrow">RIBOGRAM ATLAS</p>
       <h2>A representation atlas of non-coding RNA sequence space.</h2>
-      <p>The atlas comprises 92,781 sequences from 4,178 Rfam 15.0 Seed families. Each point is positioned by a two-dimensional UMAP projection of the corresponding RiboGRAM Layer-12 representation. We generated directed substitution-dependency maps for 3,868 structure-covered Rfam 15.1 family representatives; 3,811 map exactly to representatives in this Rfam 15.0 view.</p>
+      <p>The atlas comprises 92,781 sequences from 4,178 Rfam 15.0 Seed families. Each point is positioned by a two-dimensional UMAP projection of the corresponding RiboGRAM Layer-12 representation. Zero-shot pairing recovers Rfam pairs with 67.1% precision and 41.7% recall. Directed substitution-dependency maps cover 3,868 structure-bearing Rfam 15.1 family representatives; 3,811 map exactly to this Rfam 15.0 view.</p>
       <dl>
         <div><dt>Model</dt><dd>RiboGRAM</dd></div>
         <div><dt>Collection</dt><dd>Rfam 15.0 Seed</dd></div>
         <div><dt>Projection</dt><dd>Layer 12 · UMAP</dd></div>
+        <div><dt>Zero-shot pairing</dt><dd>1.68M candidate pairs</dd></div>
         <div><dt>Dependency scan</dt><dd>3,811 exact atlas links</dd></div>
       </dl>
       <a class="atlas-paper-button" href="https://www.biorxiv.org/content/10.64898/2026.10.12.758266v1" target="_blank" rel="noreferrer">Read the RiboGRAM preprint <span>↗</span></a>
@@ -144,6 +145,6 @@
   </main>
 
   <noscript>RiboGRAM Atlas requires JavaScript to render the interactive map.</noscript>
-  <script src="assets/atlas.js?v=20261026-1" defer></script>
+  <script src="assets/atlas.js?v=20261026-2" defer></script>
 </body>
 </html>

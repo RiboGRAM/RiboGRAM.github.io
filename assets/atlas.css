@@ -889,6 +889,59 @@ button { color: inherit; }
   line-height: 1.55;
 }
 
+.rfx-zero-benchmark {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 0 0 11px;
+  padding: 9px 11px;
+  border: 1px solid rgba(46, 101, 139, .16);
+  border-radius: 8px;
+  background: linear-gradient(110deg, rgba(238, 245, 247, .8), rgba(249, 247, 241, .72));
+}
+
+.rfx-zero-benchmark p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 9px;
+  font-weight: 680;
+  letter-spacing: .02em;
+}
+
+.rfx-zero-benchmark p span {
+  display: block;
+  margin-top: 2px;
+  color: var(--faint);
+  font-size: 8px;
+  font-weight: 520;
+}
+
+.rfx-zero-benchmark > div {
+  display: flex;
+  gap: 13px;
+}
+
+.rfx-zero-benchmark > div > span { text-align: right; }
+
+.rfx-zero-benchmark small,
+.rfx-zero-benchmark strong { display: block; }
+
+.rfx-zero-benchmark small {
+  color: var(--faint);
+  font-size: 7px;
+  font-weight: 680;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.rfx-zero-benchmark strong {
+  margin-top: 2px;
+  color: #284f6d;
+  font: 650 12px/1.1 "IBM Plex Sans", "Segoe UI", sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
 .rfx-chart-frame {
   position: relative;
   width: 100%;
@@ -1016,6 +1069,105 @@ button { color: inherit; }
   color: var(--ink);
   font: 620 15px/1.1 "IBM Plex Sans", "Segoe UI", sans-serif;
   font-variant-numeric: tabular-nums;
+}
+
+.rfx-convergence {
+  margin: 13px 0 15px;
+  padding: 14px;
+  border: 1px solid rgba(59, 94, 117, .17);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 92% 8%, rgba(54, 129, 112, .09), transparent 34%),
+    linear-gradient(135deg, rgba(240, 245, 245, .76), rgba(252, 249, 243, .82));
+}
+
+.rfx-convergence-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.rfx-convergence-head p {
+  margin: 0 0 3px;
+  color: #247e68;
+  font-size: 7px;
+  font-weight: 760;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.rfx-convergence-head h5 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 630;
+}
+
+.rfx-convergence-head > span {
+  color: var(--faint);
+  font-size: 8px;
+  white-space: nowrap;
+}
+
+.rfx-convergence-note {
+  margin: 7px 0 11px;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.rfx-convergence-metrics {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid rgba(65, 96, 114, .14);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, .52);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.rfx-convergence-metrics > div {
+  min-width: 0;
+  padding: 9px;
+  border-right: 1px solid rgba(65, 96, 114, .13);
+}
+
+.rfx-convergence-metrics > div:last-child { border-right: 0; }
+.rfx-convergence-metrics span,
+.rfx-convergence-metrics strong,
+.rfx-convergence-metrics small { display: block; }
+
+.rfx-convergence-metrics span {
+  min-height: 22px;
+  color: var(--faint);
+  font-size: 7px;
+  font-weight: 690;
+  letter-spacing: .045em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.rfx-convergence-metrics strong {
+  margin-top: 4px;
+  color: #28596e;
+  font: 650 17px/1 "IBM Plex Sans", "Segoe UI", sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.rfx-convergence-metrics small {
+  margin-top: 4px;
+  overflow: hidden;
+  color: var(--faint);
+  font-size: 7px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rfx-convergence-boundary {
+  margin: 7px 0 0;
+  color: var(--faint);
+  font-size: 7px;
+  line-height: 1.45;
 }
 
 .rfx-dependency-key {
@@ -1339,6 +1491,12 @@ button { color: inherit; }
   .rfx-dependency-metrics { grid-template-columns: repeat(2, 1fr); }
   .rfx-dependency-metrics div:nth-child(2) { border-right: 0; }
   .rfx-dependency-metrics div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+  .rfx-zero-benchmark { align-items: flex-start; flex-direction: column; }
+  .rfx-zero-benchmark > div { width: 100%; justify-content: space-between; }
+  .rfx-convergence-metrics { grid-template-columns: 1fr; }
+  .rfx-convergence-metrics > div { border-right: 0; border-bottom: 1px solid rgba(65, 96, 114, .13); }
+  .rfx-convergence-metrics > div:last-child { border-bottom: 0; }
+  .rfx-convergence-metrics span { min-height: 0; }
   .rfx-annotation-grid { grid-template-columns: 1fr; }
   .rfx-pair-list { grid-template-columns: 1fr; }
   .atlas-about { padding: 25px 21px; }

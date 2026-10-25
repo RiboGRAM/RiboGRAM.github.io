@@ -1,0 +1,1074 @@
+{
+  "base_pair_composition": {
+    "predicted_canonical_or_wobble_fraction": 0.813858170564756,
+    "true_positive_canonical_or_wobble_fraction": 0.9558774177395899
+  },
+  "by_broad_type": {
+    "Cis-reg": {
+      "micro": {
+        "f1": 0.4716740841926585,
+        "precision": 0.6355341947294794,
+        "predicted": 405311,
+        "recall": 0.37499017355682307,
+        "reference": 686922,
+        "true_positive": 257589
+      },
+      "pair_bearing_fraction": 0.9536659409401735,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 2.0,
+        "0.25": 6.0,
+        "0.5": 10.0,
+        "0.75": 15.5,
+        "0.9": 25.0,
+        "1.0": 90.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.1818181818181818,
+        "0.5": 0.5263157894736842,
+        "0.75": 0.7468273092369478,
+        "0.9": 0.8333333333333333,
+        "1.0": 1.0
+      },
+      "sequences": 32611
+    },
+    "Gene": {
+      "micro": {
+        "f1": 0.5255053050318779,
+        "precision": 0.679933977528966,
+        "predicted": 1231096,
+        "recall": 0.4282417390708223,
+        "reference": 1954653,
+        "true_positive": 837064
+      },
+      "pair_bearing_fraction": 0.9211352162641561,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 1.0,
+        "0.25": 7.0,
+        "0.5": 17.0,
+        "0.75": 29.0,
+        "0.9": 37.0,
+        "1.0": 159.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.18750000000000003,
+        "0.5": 0.5714285714285715,
+        "0.75": 0.7719298245614035,
+        "0.9": 0.8636363636363636,
+        "1.0": 1.0
+      },
+      "sequences": 58632
+    },
+    "Intron": {
+      "micro": {
+        "f1": 0.611652826403557,
+        "precision": 0.7387931034482759,
+        "predicted": 42920,
+        "recall": 0.5218471767358426,
+        "reference": 60763,
+        "true_positive": 31709
+      },
+      "pair_bearing_fraction": 0.9791937581274383,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 12.0,
+        "0.25": 18.0,
+        "0.5": 27.0,
+        "0.75": 40.0,
+        "0.9": 46.0,
+        "1.0": 82.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.2554365465757871,
+        "0.25": 0.4369612068965517,
+        "0.5": 0.6666666666666666,
+        "0.75": 0.7777777777777778,
+        "0.9": 0.836734693877551,
+        "1.0": 0.923076923076923
+      },
+      "sequences": 1538
+    }
+  },
+  "by_length": {
+    "161-320": {
+      "micro": {
+        "f1": 0.4173128775513871,
+        "precision": 0.6621276110533679,
+        "predicted": 228021,
+        "recall": 0.3046658702548249,
+        "reference": 495556,
+        "true_positive": 150979
+      },
+      "pair_bearing_fraction": 0.7158475140222454,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.0,
+        "0.5": 12.0,
+        "0.75": 39.0,
+        "0.9": 61.0,
+        "1.0": 116.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.0,
+        "0.5": 0.22448979591836732,
+        "0.75": 0.5507246376811594,
+        "0.9": 0.7500000000000001,
+        "1.0": 0.9278350515463918
+      },
+      "sequences": 10519
+    },
+    "20-80": {
+      "micro": {
+        "f1": 0.6489756424239888,
+        "precision": 0.6792706643942934,
+        "predicted": 582064,
+        "recall": 0.6212675221988444,
+        "reference": 636407,
+        "true_positive": 395379
+      },
+      "pair_bearing_fraction": 0.9791161443740729,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 3.0,
+        "0.25": 7.0,
+        "0.5": 12.0,
+        "0.75": 20.0,
+        "0.9": 28.0,
+        "1.0": 39.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.4117647058823529,
+        "0.5": 0.6666666666666666,
+        "0.75": 0.8095238095238095,
+        "0.9": 0.878048780487805,
+        "1.0": 1.0
+      },
+      "sequences": 42473
+    },
+    "321-512": {
+      "micro": {
+        "f1": 0.5887536856599763,
+        "precision": 0.7047664777084214,
+        "predicted": 139537,
+        "recall": 0.5055364780391511,
+        "reference": 194528,
+        "true_positive": 98341
+      },
+      "pair_bearing_fraction": 0.7381733021077284,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.0,
+        "0.5": 83.0,
+        "0.75": 120.0,
+        "0.9": 130.0,
+        "1.0": 159.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.0,
+        "0.5": 0.588235294117647,
+        "0.75": 0.7782805429864252,
+        "0.9": 0.8425531914893618,
+        "1.0": 0.9244444444444444
+      },
+      "sequences": 2135
+    },
+    "513-1024": {
+      "micro": {
+        "f1": 0.18771720274700573,
+        "precision": 0.75762437307249,
+        "predicted": 64202,
+        "recall": 0.10713050755998987,
+        "reference": 454035,
+        "true_positive": 48641
+      },
+      "pair_bearing_fraction": 0.6910856134157105,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.0,
+        "0.5": 68.0,
+        "0.75": 112.0,
+        "0.9": 124.0,
+        "1.0": 144.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.0,
+        "0.5": 0.12500000000000003,
+        "0.75": 0.23484848484848486,
+        "0.9": 0.3809164192823164,
+        "1.0": 0.7510917030567685
+      },
+      "sequences": 1133
+    },
+    "81-160": {
+      "micro": {
+        "f1": 0.5456031096537235,
+        "precision": 0.6506687422896666,
+        "predicted": 665503,
+        "recall": 0.4697508819585772,
+        "reference": 921812,
+        "true_positive": 433022
+      },
+      "pair_bearing_fraction": 0.9621587579748638,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 2.0,
+        "0.25": 7.0,
+        "0.5": 16.0,
+        "0.75": 29.0,
+        "0.9": 36.0,
+        "1.0": 74.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.16129032258064516,
+        "0.5": 0.5,
+        "0.75": 0.7234042553191491,
+        "0.9": 0.8285714285714286,
+        "1.0": 1.0
+      },
+      "sequences": 36521
+    }
+  },
+  "by_subtype": {
+    "CD-box": {
+      "micro": {
+        "f1": 0.4716041042097707,
+        "precision": 0.4214478425749486,
+        "predicted": 53003,
+        "recall": 0.5353111744829735,
+        "reference": 41729,
+        "true_positive": 22338
+      },
+      "pair_bearing_fraction": 0.9622718884560181,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 2.0,
+        "0.25": 5.0,
+        "0.5": 9.0,
+        "0.75": 14.0,
+        "0.9": 20.0,
+        "1.0": 66.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.0,
+        "0.5": 0.4545454545454545,
+        "0.75": 0.6666666666666666,
+        "0.9": 0.8,
+        "1.0": 1.0
+      },
+      "sequences": 4877
+    },
+    "CRISPR": {
+      "micro": {
+        "f1": 0.5109874011133899,
+        "precision": 0.5072716695753345,
+        "predicted": 1719,
+        "recall": 0.5147579693034239,
+        "reference": 1694,
+        "true_positive": 872
+      },
+      "pair_bearing_fraction": 0.896551724137931,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 3.0,
+        "0.5": 6.0,
+        "0.75": 9.0,
+        "0.9": 11.0,
+        "1.0": 16.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.0,
+        "0.5": 0.5,
+        "0.75": 0.7272727272727272,
+        "0.9": 0.8571428571428571,
+        "1.0": 1.0
+      },
+      "sequences": 290
+    },
+    "Cis-reg": {
+      "micro": {
+        "f1": 0.3676733748111159,
+        "precision": 0.6075538901049976,
+        "predicted": 134765,
+        "recall": 0.2635972621968102,
+        "reference": 310614,
+        "true_positive": 81877
+      },
+      "pair_bearing_fraction": 0.9374234797986668,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 1.0,
+        "0.25": 4.0,
+        "0.5": 8.0,
+        "0.75": 12.0,
+        "0.9": 17.0,
+        "1.0": 63.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.03125,
+        "0.5": 0.3636363636363636,
+        "0.75": 0.6666666666666666,
+        "0.9": 0.8148148148148148,
+        "1.0": 1.0
+      },
+      "sequences": 14702
+    },
+    "Gene": {
+      "micro": {
+        "f1": 0.6083773841540697,
+        "precision": 0.7132750547268009,
+        "predicted": 137958,
+        "recall": 0.5303775090011427,
+        "reference": 185532,
+        "true_positive": 98402
+      },
+      "pair_bearing_fraction": 0.875264910687254,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 9.0,
+        "0.5": 33.0,
+        "0.75": 65.0,
+        "0.9": 110.0,
+        "1.0": 142.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.2857142857142857,
+        "0.5": 0.6305418719211823,
+        "0.75": 0.7804878048780488,
+        "0.9": 0.8392857142857143,
+        "1.0": 1.0
+      },
+      "sequences": 3303
+    },
+    "HACA-box": {
+      "micro": {
+        "f1": 0.5364032432304094,
+        "precision": 0.6311988377615735,
+        "predicted": 71586,
+        "recall": 0.46636322351581205,
+        "reference": 96888,
+        "true_positive": 45185
+      },
+      "pair_bearing_fraction": 0.9790334044065387,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 7.0,
+        "0.25": 17.0,
+        "0.5": 28.0,
+        "0.75": 35.0,
+        "0.9": 39.0,
+        "1.0": 63.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.10526315789473684,
+        "0.25": 0.3829787234042554,
+        "0.5": 0.5564663023679417,
+        "0.75": 0.7075984990619136,
+        "0.9": 0.8,
+        "1.0": 0.9600000000000001
+      },
+      "sequences": 2814
+    },
+    "IRES": {
+      "micro": {
+        "f1": 0.034079102306573385,
+        "precision": 0.32917038358608386,
+        "predicted": 2242,
+        "recall": 0.017969758211789914,
+        "reference": 41069,
+        "true_positive": 738
+      },
+      "pair_bearing_fraction": 0.4855072463768116,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.0,
+        "0.5": 0.0,
+        "0.75": 3.0,
+        "0.9": 11.0,
+        "1.0": 40.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.0,
+        "0.5": 0.0,
+        "0.75": 0.0,
+        "0.9": 0.14190476190476226,
+        "1.0": 0.5000000000000001
+      },
+      "sequences": 552
+    },
+    "Intron": {
+      "micro": {
+        "f1": 0.611652826403557,
+        "precision": 0.7387931034482759,
+        "predicted": 42920,
+        "recall": 0.5218471767358426,
+        "reference": 60763,
+        "true_positive": 31709
+      },
+      "pair_bearing_fraction": 0.9791937581274383,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 12.0,
+        "0.25": 18.0,
+        "0.5": 27.0,
+        "0.75": 40.0,
+        "0.9": 46.0,
+        "1.0": 82.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.2554365465757871,
+        "0.25": 0.4369612068965517,
+        "0.5": 0.6666666666666666,
+        "0.75": 0.7777777777777778,
+        "0.9": 0.836734693877551,
+        "1.0": 0.923076923076923
+      },
+      "sequences": 1538
+    },
+    "antisense": {
+      "micro": {
+        "f1": 0.5672904234980592,
+        "precision": 0.8172258387581373,
+        "predicted": 17973,
+        "recall": 0.4344276841171251,
+        "reference": 33810,
+        "true_positive": 14688
+      },
+      "pair_bearing_fraction": 0.6438661710037175,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.0,
+        "0.5": 12.0,
+        "0.75": 28.0,
+        "0.9": 30.0,
+        "1.0": 34.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.0,
+        "0.5": 0.5294117647058824,
+        "0.75": 0.8727272727272727,
+        "0.9": 0.912280701754386,
+        "1.0": 0.9818181818181818
+      },
+      "sequences": 1345
+    },
+    "antitoxin": {
+      "micro": {
+        "f1": 0.45261287753476687,
+        "precision": 0.4649465072372561,
+        "predicted": 7945,
+        "recall": 0.4409166865600382,
+        "reference": 8378,
+        "true_positive": 3694
+      },
+      "pair_bearing_fraction": 0.9965156794425087,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 11.0,
+        "0.25": 15.0,
+        "0.5": 19.0,
+        "0.75": 44.0,
+        "0.9": 58.0,
+        "1.0": 76.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.15156695156695157,
+        "0.25": 0.33333333333333326,
+        "0.5": 0.48780487804878053,
+        "0.75": 0.6666666666666667,
+        "0.9": 0.7599364069952308,
+        "1.0": 0.8648648648648648
+      },
+      "sequences": 287
+    },
+    "frameshift_element": {
+      "micro": {
+        "f1": 0.5238344683080146,
+        "precision": 0.7012622720897616,
+        "predicted": 3565,
+        "recall": 0.4180602006688963,
+        "reference": 5980,
+        "true_positive": 2500
+      },
+      "pair_bearing_fraction": 0.9887640449438202,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 3.0,
+        "0.25": 6.0,
+        "0.5": 11.0,
+        "0.75": 14.0,
+        "0.9": 16.0,
+        "1.0": 22.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.07417582417582418,
+        "0.25": 0.24181818181818182,
+        "0.5": 0.5714285714285714,
+        "0.75": 0.7218181818181818,
+        "0.9": 0.8062500000000001,
+        "1.0": 1.0
+      },
+      "sequences": 356
+    },
+    "leader": {
+      "micro": {
+        "f1": 0.564623698794021,
+        "precision": 0.6592877251950888,
+        "predicted": 93419,
+        "recall": 0.49373116141858525,
+        "reference": 124744,
+        "true_positive": 61590
+      },
+      "pair_bearing_fraction": 0.9740049617085536,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 3.0,
+        "0.25": 7.0,
+        "0.5": 9.0,
+        "0.75": 13.0,
+        "0.9": 16.0,
+        "1.0": 90.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.34782608695652173,
+        "0.5": 0.6666666666666665,
+        "0.75": 0.8,
+        "0.9": 0.8571428571428571,
+        "1.0": 1.0
+      },
+      "sequences": 9271
+    },
+    "lncRNA": {
+      "micro": {
+        "f1": 0.03748580083301779,
+        "precision": 0.02034734354125989,
+        "predicted": 9731,
+        "recall": 0.23769507803121248,
+        "reference": 833,
+        "true_positive": 198
+      },
+      "pair_bearing_fraction": 0.5729713051527306,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.0,
+        "0.5": 1.0,
+        "0.75": 5.0,
+        "0.9": 9.0,
+        "1.0": 31.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.0,
+        "0.5": 0.0,
+        "0.75": 0.0,
+        "0.9": 0.0,
+        "1.0": 0.7741935483870968
+      },
+      "sequences": 3241
+    },
+    "miRNA": {
+      "micro": {
+        "f1": 0.7363366563277676,
+        "precision": 0.7050933320343845,
+        "predicted": 390059,
+        "recall": 0.7704771989982014,
+        "reference": 356958,
+        "true_positive": 275028
+      },
+      "pair_bearing_fraction": 0.988328530259366,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 17.0,
+        "0.25": 24.0,
+        "0.5": 29.0,
+        "0.75": 33.0,
+        "0.9": 36.0,
+        "1.0": 107.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.48,
+        "0.25": 0.6511627906976744,
+        "0.5": 0.7659574468085107,
+        "0.75": 0.8518518518518519,
+        "0.9": 0.9047619047619047,
+        "1.0": 1.0
+      },
+      "sequences": 13880
+    },
+    "rRNA": {
+      "micro": {
+        "f1": 0.2632439624172574,
+        "precision": 0.7262767915994273,
+        "predicted": 87994,
+        "recall": 0.16075543079074728,
+        "reference": 397548,
+        "true_positive": 63908
+      },
+      "pair_bearing_fraction": 0.9992857142857143,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 16.0,
+        "0.25": 38.0,
+        "0.5": 42.0,
+        "0.75": 100.25,
+        "0.9": 123.0,
+        "1.0": 144.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.14226202406817978,
+        "0.25": 0.20777804788668006,
+        "0.5": 0.45833333333333326,
+        "0.75": 0.6775560415527611,
+        "0.9": 0.7105263157894737,
+        "1.0": 0.8444444444444444
+      },
+      "sequences": 1400
+    },
+    "riboswitch": {
+      "micro": {
+        "f1": 0.5994805251201659,
+        "precision": 0.6485577036010429,
+        "predicted": 170284,
+        "recall": 0.557308303686322,
+        "reference": 198165,
+        "true_positive": 110439
+      },
+      "pair_bearing_fraction": 0.9957604663487016,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 7.0,
+        "0.25": 13.0,
+        "0.5": 19.0,
+        "0.75": 28.0,
+        "0.9": 42.0,
+        "1.0": 80.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.2622950819672131,
+        "0.25": 0.4418604651162791,
+        "0.5": 0.6428571428571429,
+        "0.75": 0.75,
+        "0.9": 0.8421052631578948,
+        "1.0": 1.0
+      },
+      "sequences": 7548
+    },
+    "ribozyme": {
+      "micro": {
+        "f1": 0.630534278735564,
+        "precision": 0.7056778371492268,
+        "predicted": 113036,
+        "recall": 0.5698538341739416,
+        "reference": 139978,
+        "true_positive": 79767
+      },
+      "pair_bearing_fraction": 0.9680555555555556,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 3.0,
+        "0.25": 9.0,
+        "0.5": 13.0,
+        "0.75": 21.0,
+        "0.9": 117.0,
+        "1.0": 159.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.34782608695652173,
+        "0.5": 0.4666666666666666,
+        "0.75": 0.6486486486486486,
+        "0.9": 0.8001587301587302,
+        "1.0": 1.0
+      },
+      "sequences": 3600
+    },
+    "sRNA": {
+      "micro": {
+        "f1": 0.404667476055578,
+        "precision": 0.6606737118756676,
+        "predicted": 272431,
+        "recall": 0.2916537709295787,
+        "reference": 617129,
+        "true_positive": 179988
+      },
+      "pair_bearing_fraction": 0.9148100234775526,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 1.0,
+        "0.25": 5.0,
+        "0.5": 11.0,
+        "0.75": 19.0,
+        "0.9": 26.0,
+        "1.0": 95.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.07142857142857142,
+        "0.5": 0.43956043956043955,
+        "0.75": 0.6956521739130436,
+        "0.9": 0.8085106382978724,
+        "1.0": 1.0
+      },
+      "sequences": 20871
+    },
+    "scaRNA": {
+      "micro": {
+        "f1": 0.5420419284038447,
+        "precision": 0.6881245196003074,
+        "predicted": 10408,
+        "recall": 0.44712198776376577,
+        "reference": 16018,
+        "true_positive": 7162
+      },
+      "pair_bearing_fraction": 0.9951100244498777,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 6.0,
+        "0.25": 15.0,
+        "0.5": 27.0,
+        "0.75": 35.0,
+        "0.9": 41.0,
+        "1.0": 59.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.1519047619047619,
+        "0.25": 0.34285714285714286,
+        "0.5": 0.6,
+        "0.75": 0.7222222222222222,
+        "0.9": 0.7812499999999999,
+        "1.0": 0.8405797101449276
+      },
+      "sequences": 409
+    },
+    "snRNA": {
+      "micro": {
+        "f1": 0.7964774951076321,
+        "precision": 0.888646288209607,
+        "predicted": 458,
+        "recall": 0.7216312056737588,
+        "reference": 564,
+        "true_positive": 407
+      },
+      "pair_bearing_fraction": 1.0,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 1.0,
+        "0.1": 3.2,
+        "0.25": 7.0,
+        "0.5": 10.0,
+        "0.75": 11.0,
+        "0.9": 11.800000000000004,
+        "1.0": 12.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.1285714285714286,
+        "0.25": 0.6153846153846153,
+        "0.5": 0.9523809523809523,
+        "0.75": 0.9565217391304348,
+        "0.9": 1.0,
+        "1.0": 1.0
+      },
+      "sequences": 53
+    },
+    "snoRNA": {
+      "micro": {
+        "f1": 0.13020833333333331,
+        "precision": 0.49019607843137253,
+        "predicted": 51,
+        "recall": 0.07507507507507508,
+        "reference": 333,
+        "true_positive": 25
+      },
+      "pair_bearing_fraction": 0.9333333333333333,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 1.0,
+        "0.25": 2.0,
+        "0.5": 2.0,
+        "0.75": 5.5,
+        "0.9": 7.0,
+        "1.0": 8.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.0,
+        "0.5": 0.0,
+        "0.75": 0.2985714285714286,
+        "0.9": 0.36507936507936506,
+        "1.0": 0.3846153846153846
+      },
+      "sequences": 15
+    },
+    "splicing": {
+      "micro": {
+        "f1": 0.71914666331532,
+        "precision": 0.7740353724933211,
+        "predicted": 29571,
+        "recall": 0.6715270646912131,
+        "reference": 34085,
+        "true_positive": 22889
+      },
+      "pair_bearing_fraction": 0.9864864864864865,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 5.0,
+        "0.25": 12.0,
+        "0.5": 25.0,
+        "0.75": 33.0,
+        "0.9": 50.0,
+        "1.0": 58.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.46153846153846156,
+        "0.25": 0.6363636363636364,
+        "0.5": 0.7633971291866029,
+        "0.75": 0.8363636363636364,
+        "0.9": 0.8888888888888888,
+        "1.0": 1.0
+      },
+      "sequences": 1184
+    },
+    "tRNA": {
+      "micro": {
+        "f1": 0.894277939978947,
+        "precision": 0.8285062378095904,
+        "predicted": 27173,
+        "recall": 0.9713928201587849,
+        "reference": 23176,
+        "true_positive": 22513
+      },
+      "pair_bearing_fraction": 1.0,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 15.0,
+        "0.1": 22.0,
+        "0.25": 23.0,
+        "0.5": 25.0,
+        "0.75": 27.0,
+        "0.9": 30.0,
+        "1.0": 39.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.4590163934426229,
+        "0.1": 0.8400000000000001,
+        "0.25": 0.8750000000000001,
+        "0.5": 0.909090909090909,
+        "0.75": 0.9333333333333333,
+        "0.9": 0.9545454545454545,
+        "1.0": 1.0
+      },
+      "sequences": 1063
+    },
+    "thermoregulator": {
+      "micro": {
+        "f1": 0.1204982399133496,
+        "precision": 0.4295366795366795,
+        "predicted": 1036,
+        "recall": 0.07007874015748032,
+        "reference": 6350,
+        "true_positive": 445
+      },
+      "pair_bearing_fraction": 0.8351648351648352,
+      "predicted_pairs_per_sequence_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 2.0,
+        "0.5": 4.0,
+        "0.75": 8.0,
+        "0.9": 13.0,
+        "1.0": 24.0
+      },
+      "sequence_f1_quantiles": {
+        "0.0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.0,
+        "0.5": 0.0,
+        "0.75": 0.16346153846153846,
+        "0.9": 0.34367816091954034,
+        "1.0": 0.7272727272727273
+      },
+      "sequences": 182
+    }
+  },
+  "coverage": {
+    "families_evaluated": 4178,
+    "missing_detail_families": [],
+    "missing_detail_sequences_count": 0,
+    "missing_detail_sequences_sample": [],
+    "rfam_families_seen": 4178,
+    "sequences_evaluated": 92781
+  },
+  "dependency_overlap": {
+    "dependency_q999_full": {
+      "f1": 0.10413620586448179,
+      "precision": 0.05989434071876321,
+      "predicted": 771158,
+      "recall": 0.3984781427129436,
+      "reference": 115911,
+      "true_positive": 46188
+    },
+    "displayed_arc_overlap_lower_bound": {
+      "note": "Atlas dependency arcs are capped at 250 per family; positional overlap values are lower bounds.",
+      "reference_pairs_recovered_by_both": 39763,
+      "reference_pairs_recovered_by_either": 48932,
+      "reference_recall_both": 0.3430476831361993,
+      "reference_recall_either": 0.4221514782893772,
+      "zero_shot_and_dependency_pairs": 55286,
+      "zero_shot_pairs_supported_by_dependency_fraction": 0.8338385895057538
+    },
+    "families_with_exact_representative": 3811,
+    "zero_shot": {
+      "f1": 0.48781103537598647,
+      "precision": 0.6703014946533339,
+      "predicted": 66303,
+      "recall": 0.3834234887111663,
+      "reference": 115911,
+      "true_positive": 44443
+    }
+  },
+  "family_alignment_consensus": {
+    "0.05": {
+      "f1": 0.4582975574820659,
+      "precision": 0.4390708041759225,
+      "predicted": 131899,
+      "recall": 0.4792852886652542,
+      "reference": 120832,
+      "true_positive": 57913
+    },
+    "0.1": {
+      "f1": 0.48062718124216447,
+      "precision": 0.4922184051634395,
+      "predicted": 115272,
+      "recall": 0.4695693193855932,
+      "reference": 120832,
+      "true_positive": 56739
+    },
+    "0.25": {
+      "f1": 0.5008039446886056,
+      "precision": 0.5731903771270069,
+      "predicted": 93735,
+      "recall": 0.4446504237288136,
+      "reference": 120832,
+      "true_positive": 53728
+    },
+    "0.5": {
+      "f1": 0.4997559586756691,
+      "precision": 0.6479118329466357,
+      "predicted": 75856,
+      "recall": 0.4067465572033898,
+      "reference": 120832,
+      "true_positive": 49148
+    }
+  },
+  "family_f1_quantiles": {
+    "0.0": 0.0,
+    "0.1": 0.0,
+    "0.25": 0.06677852348993289,
+    "0.5": 0.46808510638297873,
+    "0.75": 0.721102581152149,
+    "0.9": 0.8325892470353468,
+    "1.0": 0.9914529914529915
+  },
+  "geometry": {
+    "precision_all_predicted_pairs": 0.6707222595718404,
+    "precision_pairs_in_run_ge_2": 0.7111068112715733,
+    "precision_pairs_in_run_ge_3": 0.7215117529110084,
+    "predicted_pairs_in_antidiagonal_run_ge_2_fraction": 0.9140215098072025,
+    "predicted_pairs_in_antidiagonal_run_ge_3_fraction": 0.866875242284558,
+    "reference_run_ge_2_recall": 0.4222214862297481,
+    "reference_run_ge_3_recall": 0.436018856943685
+  },
+  "limitations": [
+    "Rfam Seed sequences are not an independent held-out set and may overlap the pretraining corpus.",
+    "Only attention cells at or above 0.4 are stored; score-ranking AUC cannot be reconstructed.",
+    "The zero-shot matrix is symmetrized, so it cannot support source-to-target direction claims.",
+    "Displayed dependency arcs are capped at 250 per family, so positional overlap with dependency q99.9 edges is a lower bound."
+  ],
+  "method": {
+    "directionality": "none; the stored matrix is explicitly symmetrized",
+    "interpretation_boundary": "candidate model pairing signal, not an experimental contact or perturbational dependency",
+    "reference": "Rfam 15.0 SS_cons pairs mapped to each ungapped Seed sequence",
+    "rfam_seed_sha256": "B06AC74D772609E863C5E1906EB491D699E9D325C5F22F4FC78126A808AD0BED",
+    "rfam_seed_url": "https://ftp.ebi.ac.uk/pub/databases/Rfam/15.0/Rfam.seed.gz",
+    "zero_shot_signal": "RiboGRAM Layer-12 Head-20 attention, symmetrized, positive APC, score >= 0.4"
+  },
+  "overall": {
+    "micro": {
+      "f1": 0.5141251099753176,
+      "precision": 0.6707222595718404,
+      "predicted": 1679327,
+      "recall": 0.41681018436627837,
+      "reference": 2702338,
+      "true_positive": 1126362
+    },
+    "pair_bearing_fraction": 0.9335316497989891,
+    "predicted_pairs_per_sequence_quantiles": {
+      "0.0": 0.0,
+      "0.1": 1.0,
+      "0.25": 6.0,
+      "0.5": 13.0,
+      "0.75": 25.0,
+      "0.9": 35.0,
+      "1.0": 159.0
+    },
+    "sequence_f1_quantiles": {
+      "0.0": 0.0,
+      "0.1": 0.0,
+      "0.25": 0.19047619047619047,
+      "0.5": 0.5607476635514019,
+      "0.75": 0.761904761904762,
+      "0.9": 0.8533333333333333,
+      "1.0": 1.0
+    },
+    "sequences": 92781
+  }
+}
