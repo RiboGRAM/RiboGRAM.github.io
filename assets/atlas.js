@@ -141,6 +141,7 @@
             this.points = [];
             this.families = new Map();
             this.detailCache = new Map();
+            this.dependencyCache = new Map();
             this.filteredPoints = [];
             this.spatialBins = new Map();
             this.binCount = 180;
@@ -780,6 +781,16 @@
                 const detail = familyDetails.points[point.id];
                 if (!detail) throw new Error("detail record is missing");
                 this.renderAnalysis(point, detail);
+                if (this.root.dataset.dependencies) {
+                    try {
+                        const dependency = await this.loadDependency(point.family);
+                        if (requestId !== this.selectionRequest) return;
+                        this.renderDependency(point, dependency);
+                    } catch (_dependencyError) {
+                        // Some Rfam 15.0 families do not have an eligible Rfam 15.1
+                        // representative.  The two released analyses remain available.
+                    }
+                }
             } catch (_error) {
                 if (requestId !== this.selectionRequest) return;
                 const target = this.inspector.querySelector("[data-rfx-analysis]");
@@ -814,6 +825,19 @@
                 return response.json();
             }).catch((error) => { this.detailCache.delete(resolvedURL); throw error; }));
             return this.detailCache.get(resolvedURL);
+        }
+
+        async loadDependency(family) {
+            const base = new URL(this.root.dataset.dependencies.replace(/\/?$/, "/"), document.baseURI);
+            const resolvedURL = new URL(`${encodeURIComponent(family)}.json.gz`, base).href;
+            if (!this.dependencyCache.has(resolvedURL)) this.dependencyCache.set(resolvedURL, fetch(resolvedURL).then((response) => {
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                if (!("DecompressionStream" in window) || !response.body) {
+                    throw new Error("this browser cannot decompress the dependency bundle");
+                }
+                return new Response(response.body.pipeThrough(new DecompressionStream("gzip"))).json();
+            }).catch((error) => { this.dependencyCache.delete(resolvedURL); throw error; }));
+            return this.dependencyCache.get(resolvedURL);
         }
 
         renderInspectorShell(point) {
@@ -855,11 +879,123 @@
                 const leftBase = analysisSequence[left - 1] || "N", rightBase = analysisSequence[right - 1] || "N";
                 return `<li><span>${leftBase}${left}—${rightBase}${right}</span><strong>${Number(pair[2]).toFixed(3)}</strong></li>`;
             }).join("");
-            target.innerHTML = `<section class="rfx-interpretation-intro"><p class="rfx-kicker">RiboGRAM-derived analyses</p><h4>Contextual dependency and zero-shot pairing</h4><p>Position-resolved contextual dependency and zero-shot base-pairing signals derived from the pretrained RiboGRAM model.</p><div class="rfx-model-metrics"><div><span>Mean dependency</span><strong>${Number(context.mean || 0).toFixed(3)}</strong></div><div><span>Maximum dependency</span><strong>${Number(context.maximum || context.scale_max || 0).toFixed(3)}</strong></div><div><span>Candidate pairs</span><strong>${Number(attention.predicted_pair_count || pairs.length).toLocaleString()}</strong></div><div><span>Maximum APC score</span><strong>${strongest ? Number(strongest[2]).toFixed(3) : "—"}</strong></div></div></section><section class="rfx-analysis-section"><div class="rfx-analysis-heading"><div><p>01 · Sequence contextual dependency</p><h4>Per-nucleotide dependency score</h4></div><span>Position-resolved</span></div><p class="rfx-analysis-note">Per-nucleotide sensitivity of the learned representation to perturbations in local sequence context.</p><div class="rfx-chart-frame rfx-context-frame"><canvas data-rfx-context aria-label="Position-resolved sequence contextual dependency scores"></canvas><span class="rfx-chart-tip" data-rfx-context-tip hidden></span></div></section><section class="rfx-analysis-section"><div class="rfx-analysis-heading"><div><p>02 · Zero-shot base pairing</p><h4>APC-corrected attention map</h4></div><span>L12 · H20 · APC ≥ ${Number(attention.pair_threshold || .4).toFixed(1)}</span></div><p class="rfx-analysis-note">Symmetrized, APC-corrected Layer-12 Head-20 attention. Cells above the indicated threshold denote candidate base-pairing signals obtained without structure supervision.</p><div class="rfx-chart-frame rfx-attention-frame"><canvas data-rfx-attention aria-label="Zero-shot base-pair signal map"></canvas><span class="rfx-chart-tip" data-rfx-attention-tip hidden></span></div>${pairList ? `<ol class="rfx-pair-list">${pairList}</ol>` : `<p class="rfx-no-pairs">No candidate pair exceeded the specified APC threshold.</p>`}</section>`;
+            target.innerHTML = `<section class="rfx-interpretation-intro"><p class="rfx-kicker">RiboGRAM-derived analyses</p><h4>Contextual constraint and zero-shot pairing</h4><p>Two complementary readouts from the frozen RiboGRAM backbone: masked-nucleotide contextual recovery and an APC-corrected attention pairing signal.</p><div class="rfx-model-metrics"><div><span>Mean contextual score</span><strong>${Number(context.mean || 0).toFixed(3)}</strong></div><div><span>Maximum contextual score</span><strong>${Number(context.maximum || context.scale_max || 0).toFixed(3)}</strong></div><div><span>Candidate pairs</span><strong>${Number(attention.predicted_pair_count || pairs.length).toLocaleString()}</strong></div><div><span>Maximum APC score</span><strong>${strongest ? Number(strongest[2]).toFixed(3) : "—"}</strong></div></div></section><section class="rfx-analysis-section"><div class="rfx-analysis-heading"><div><p>01 · Masked-nucleotide context</p><h4>Contextual recovery along the sequence</h4></div><span>Position-resolved</span></div><p class="rfx-analysis-note">Confidence with which the frozen model recovers each native nucleotide when that position is masked. This is not a mutation-effect or base-pairing probability.</p><div class="rfx-chart-frame rfx-context-frame"><canvas data-rfx-context aria-label="Position-resolved sequence contextual dependency scores"></canvas><span class="rfx-chart-tip" data-rfx-context-tip hidden></span></div></section><section class="rfx-analysis-section"><div class="rfx-analysis-heading"><div><p>02 · Zero-shot base pairing</p><h4>APC-corrected attention map</h4></div><span>L12 · H20 · APC ≥ ${Number(attention.pair_threshold || .4).toFixed(1)}</span></div><p class="rfx-analysis-note">Symmetrized, APC-corrected Layer-12 Head-20 attention. Cells above the indicated threshold denote candidate base-pairing signals obtained without structure supervision.</p><div class="rfx-chart-frame rfx-attention-frame"><canvas data-rfx-attention aria-label="Zero-shot base-pair signal map"></canvas><span class="rfx-chart-tip" data-rfx-attention-tip hidden></span></div>${pairList ? `<ol class="rfx-pair-list">${pairList}</ol>` : `<p class="rfx-no-pairs">No candidate pair exceeded the specified APC threshold.</p>`}</section><div data-rfx-dependency-slot></div>`;
             requestAnimationFrame(() => {
                 this.drawContext(target.querySelector("[data-rfx-context]"), analysisSequence, contextValues);
                 this.drawAttention(target.querySelector("[data-rfx-attention]"), attention);
             });
+        }
+
+        renderDependency(point, dependency) {
+            const slot = this.inspector.querySelector("[data-rfx-dependency-slot]");
+            if (!slot || !dependency) return;
+            if (String(dependency.sequence_accession) !== String(point.accession)) {
+                const representative = this.points.find((item) => item.family === point.family
+                    && String(item.accession) === String(dependency.sequence_accession));
+                if (!representative) return;
+                slot.innerHTML = `<section class="rfx-dependency-available"><div><p>03 · Saturation-mutagenesis map</p><strong>Available for the family representative</strong><span>${escapeHTML(dependency.sequence_accession)} · ${Number(dependency.length).toLocaleString()} nt</span></div><button type="button" data-rfx-open-dependency>Open map</button></section>`;
+                slot.querySelector("[data-rfx-open-dependency]").addEventListener("click", () => this.selectPoint(representative));
+                return;
+            }
+
+            const summary = dependency.summary || {};
+            const arcs = Array.isArray(dependency.arcs) ? dependency.arcs : [];
+            const strongest = [...arcs].sort((left, right) => Math.max(Number(right[2]), Number(right[3]))
+                - Math.max(Number(left[2]), Number(left[3]))).slice(0, 8);
+            const sequence = String(dependency.sequence || point.sequence).toUpperCase().replaceAll("T", "U");
+            const arcList = strongest.map((arc) => {
+                const left = Number(arc[0]), right = Number(arc[1]);
+                const forward = Number(arc[2]), reverse = Number(arc[3]);
+                const forwardDominant = forward >= reverse;
+                const source = forwardDominant ? left : right, target = forwardDominant ? right : left;
+                const label = `${sequence[source] || "N"}${source + 1} → ${sequence[target] || "N"}${target + 1}`;
+                return `<li><span>${label}</span><strong>${Math.max(forward, reverse).toFixed(3)} · q${Number(arc[4]) === 2 ? "99.9" : "99"}</strong></li>`;
+            }).join("");
+            const recall = Number(summary.reference_recall_q999 || 0) * 100;
+            slot.innerHTML = `<section class="rfx-analysis-section rfx-dependency-section"><div class="rfx-analysis-heading"><div><p>03 · Saturation mutagenesis</p><h4>Directed nucleotide-dependency architecture</h4></div><span>3 substitutions per source · all targets</span></div><p class="rfx-analysis-note">Each source nucleotide was replaced by all three alternatives. Edge weight is the maximum absolute change in target log₂ odds over the three substitutions and four target bases. Thresholds are matched to dinucleotide-preserving null RNAs by length, GC content and sequence separation.</p><div class="rfx-dependency-metrics"><div><span>q99 edges</span><strong>${Number(summary.q99_pairs || 0).toLocaleString()}</strong></div><div><span>q99.9 edges</span><strong>${Number(summary.q999_pairs || 0).toLocaleString()}</strong></div><div><span>Rfam-pair recall</span><strong>${recall.toFixed(1)}%</strong></div><div><span>Displayed arcs</span><strong>${arcs.length.toLocaleString()}</strong></div></div><div class="rfx-dependency-key"><span><i class="is-forward"></i>5′ → 3′ dependency</span><span><i class="is-reverse"></i>3′ → 5′ dependency</span><span><i class="is-reference"></i>Rfam consensus pair</span></div><div class="rfx-chart-frame rfx-dependency-frame"><canvas data-rfx-dependency aria-label="Directed substitution-dependency arc map"></canvas></div>${arcList ? `<ol class="rfx-pair-list rfx-dependency-list">${arcList}</ol>` : ""}<p class="rfx-method-boundary">These arcs report dependencies inside the frozen model. They are hypotheses about learned sequence organization, not demonstrated molecular contacts.</p></section>`;
+            requestAnimationFrame(() => this.drawDependencyArcs(
+                slot.querySelector("[data-rfx-dependency]"), dependency
+            ));
+        }
+
+        drawDependencyArcs(canvas, dependency) {
+            if (!canvas) return;
+            const frame = canvas.parentElement;
+            const width = Math.max(280, Math.round(frame.getBoundingClientRect().width));
+            const height = 360, dpr = Math.min(window.devicePixelRatio || 1, 2);
+            frame.style.height = `${height}px`;
+            canvas.style.width = `${width}px`; canvas.style.height = `${height}px`;
+            canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
+            const ctx = canvas.getContext("2d"); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, width, height); ctx.fillStyle = "#fffdf9"; ctx.fillRect(0, 0, width, height);
+            const length = Math.max(1, Number(dependency.length) || String(dependency.sequence || "").length);
+            const leftMargin = 24, rightMargin = 16, baseline = 178;
+            const plotWidth = width - leftMargin - rightMargin;
+            const positionX = (position) => leftMargin + Number(position) / Math.max(1, length - 1) * plotWidth;
+            const references = Array.isArray(dependency.reference_pairs) ? dependency.reference_pairs : [];
+            ctx.save(); ctx.strokeStyle = "rgba(116, 91, 61, .24)"; ctx.lineWidth = .8; ctx.setLineDash([2, 3]);
+            for (const pair of references) {
+                const x1 = positionX(pair[0]), x2 = positionX(pair[1]);
+                const amplitude = Math.min(118, 12 + Math.sqrt(Math.abs(x2 - x1) / Math.max(1, plotWidth)) * 125);
+                ctx.beginPath(); ctx.moveTo(x1, baseline); ctx.quadraticCurveTo((x1 + x2) / 2, baseline - amplitude, x2, baseline); ctx.stroke();
+            }
+            ctx.restore();
+
+            const distanceLabel = (distance) => {
+                if (distance <= 3) return "2-3";
+                if (distance <= 7) return "4-7";
+                if (distance <= 15) return "8-15";
+                if (distance <= 31) return "16-31";
+                if (distance <= 63) return "32-63";
+                if (distance <= 127) return "64-127";
+                if (distance <= 255) return "128-255";
+                if (distance <= 512) return "256-512";
+                return "513-1024";
+            };
+            const directed = [];
+            for (const arc of (dependency.arcs || [])) {
+                const lower = Number(arc[0]), upper = Number(arc[1]);
+                const thresholds = dependency.thresholds_by_separation?.[distanceLabel(upper - lower)] || {};
+                const q99 = Number(thresholds.q99 || 0), q999 = Number(thresholds.q999 || Infinity);
+                const forward = Number(arc[2]), reverse = Number(arc[3]);
+                if (forward >= q99) directed.push({ source: lower, target: upper, score: forward, tier: forward >= q999 ? 2 : 1 });
+                if (reverse >= q99) directed.push({ source: upper, target: lower, score: reverse, tier: reverse >= q999 ? 2 : 1 });
+            }
+            directed.sort((left, right) => left.score - right.score);
+            const maximum = Math.max(1e-8, ...directed.map((edge) => edge.score));
+            for (const edge of directed) {
+                const x1 = positionX(edge.source), x2 = positionX(edge.target), forward = edge.source < edge.target;
+                const span = Math.abs(x2 - x1);
+                const amplitude = Math.min(128, 13 + Math.sqrt(span / Math.max(1, plotWidth)) * 132);
+                const controlY = baseline + (forward ? -amplitude : amplitude);
+                const strength = Math.sqrt(edge.score / maximum);
+                ctx.strokeStyle = forward
+                    ? `rgba(42, 104, 151, ${(.15 + .68 * strength).toFixed(3)})`
+                    : `rgba(36, 126, 104, ${(.15 + .68 * strength).toFixed(3)})`;
+                ctx.lineWidth = edge.tier === 2 ? 1.35 : .75;
+                ctx.beginPath(); ctx.moveTo(x1, baseline); ctx.quadraticCurveTo((x1 + x2) / 2, controlY, x2, baseline); ctx.stroke();
+            }
+
+            ctx.strokeStyle = "#526575"; ctx.lineWidth = 1; ctx.beginPath();
+            ctx.moveTo(leftMargin, baseline + .5); ctx.lineTo(width - rightMargin, baseline + .5); ctx.stroke();
+            const sequence = String(dependency.sequence || "").toUpperCase().replaceAll("T", "U");
+            if (length <= 80 && plotWidth / length >= 5.4) {
+                ctx.font = '600 8px "IBM Plex Sans", "Segoe UI", sans-serif'; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+                for (let index = 0; index < length; index += 1) {
+                    ctx.fillStyle = BASE_COLORS[sequence[index]] || BASE_COLORS.N;
+                    ctx.fillText(sequence[index] || "N", positionX(index), baseline + 12);
+                }
+            }
+            const ticks = oneBasedPositionTicks(length, Math.max(5, Math.floor(width / 70)));
+            ctx.fillStyle = "#516579"; ctx.strokeStyle = "#718294"; ctx.font = '10px "IBM Plex Sans", "Segoe UI", sans-serif';
+            ctx.textAlign = "center"; ctx.textBaseline = "top";
+            for (const tick of ticks) {
+                const x = positionX(tick.position);
+                ctx.beginPath(); ctx.moveTo(x, baseline - 3); ctx.lineTo(x, baseline + 4); ctx.stroke();
+                ctx.fillText(String(tick.label), x, baseline + (length <= 80 ? 22 : 7));
+            }
+            ctx.fillStyle = "#0a2540"; ctx.font = '11px "IBM Plex Sans", "Segoe UI", sans-serif';
+            ctx.fillText("RNA position (5′ → 3′)", leftMargin + plotWidth / 2, height - 17);
         }
 
         drawAttention(canvas, attention) {

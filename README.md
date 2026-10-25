@@ -5,7 +5,7 @@ Two linked, buildless atlases make the representation space learned by RiboGRAM 
 - **RNAcentral Universe** — a deterministic release-28 pilot of **1,995,878** RNAs, with a stratified 300,000-point WebGL map, **296** evidence-calibrated Leiden neighborhoods and provenance-aware annotations
 - **Rfam Seeds** — **92,781** Seed sequences spanning **4,178** Rfam 15.0 families
 - Search, evidence filtering and coloring by RNA class, annotation status, taxonomy, family or cluster
-- Per-nucleotide Layer-7/12 attention and zero-shot pairing tracks for representative RNAs
+- Masked-nucleotide contextual recovery, zero-shot attention pairing and directed saturation-mutagenesis dependency maps for representative RNAs
 - Pan/zoom, point inspection and shareable RNAcentral accession URLs
 - Static GitHub Pages deployment with no browser-side model inference
 
@@ -30,7 +30,7 @@ The included GitHub Actions workflow publishes the repository root to GitHub Pag
 
 The RNAcentral view is explicitly a sampled release-28 pilot rather than the complete release. Direct RNAcentral/Rfam evidence, RiboGRAM predictions, cluster-propagated labels and computational novel candidates remain separate in the interface. See [RNACENTRAL_ATLAS.md](RNACENTRAL_ATLAS.md) for sampling, feature, clustering and annotation definitions.
 
-The Rfam view contains public Rfam 15.0 Seed sequences and precomputed UMAP coordinates from RiboGRAM Layer-12 representations. Detail bundles expose position-resolved contextual-dependency scores and symmetrized, APC-corrected Layer-12 Head-20 pairing signals. The interface does not perform model inference in the browser.
+The Rfam view contains public Rfam 15.0 Seed sequences and precomputed UMAP coordinates from RiboGRAM Layer-12 representations. Detail bundles expose masked-nucleotide contextual-recovery scores and symmetrized, APC-corrected Layer-12 Head-20 pairing signals. A separate Rfam 15.1 saturation-mutagenesis scan covers 3,868 structure-bearing family representatives; 3,811 representatives link exactly to the current 15.0 view. Its directed edges are calibrated against dinucleotide-preserving null RNAs matched by length, GC content and sequence separation. These edges describe dependencies learned by the frozen model, not experimentally demonstrated molecular contacts. The interface does not perform model inference in the browser.
 
 ## Citation
 

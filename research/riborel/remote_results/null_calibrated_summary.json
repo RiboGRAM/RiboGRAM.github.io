@@ -1,0 +1,18 @@
+{
+  "directed_edges_tested": 76423432,
+  "exported_arcs": 698660,
+  "families_exported": 3868,
+  "families_in_manifest": 3868,
+  "max_arcs_per_family": 250,
+  "min_separation": 2,
+  "missing": [],
+  "nonreference_pairs_q999": 733952,
+  "q999_pairs": 780489,
+  "q99_pairs": 2933469,
+  "reference_pairs": 117236,
+  "reference_pairs_q99": 60805,
+  "reference_pairs_q999": 46537,
+  "reference_recall_q99": 0.5186546794499983,
+  "reference_recall_q999": 0.39695144836057183,
+  "undirected_pairs_tested": 38211716
+}

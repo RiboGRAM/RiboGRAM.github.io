@@ -1,0 +1,32 @@
+{
+  "broad_type_counts": {
+    "Cis-reg": 552,
+    "Gene": 3299,
+    "Intron": 17
+  },
+  "filters": {
+    "limit": 0,
+    "max_length": 1024,
+    "min_length": 20,
+    "min_reference_pairs": 1
+  },
+  "length_max": 1003,
+  "length_median": 90,
+  "length_min": 20,
+  "rfam_families_seen": 4227,
+  "selected_representatives": 3868,
+  "shard_costs": {
+    "0": 5568581073,
+    "1": 5568587896,
+    "2": 5568579995,
+    "3": 5568580993
+  },
+  "shard_records": {
+    "0": 966,
+    "1": 968,
+    "2": 967,
+    "3": 967
+  },
+  "total_forward_sequences": 1356517,
+  "total_nucleotides": 450883
+}
