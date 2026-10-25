@@ -1,0 +1,213 @@
+{
+  "nucleotides": 653939172,
+  "records": 1995878,
+  "schema_version": 1,
+  "shard_bounds": [
+    {
+      "nt_start": 0,
+      "nt_stop": 40976249,
+      "record_start": 0,
+      "record_stop": 125149,
+      "shard": 0
+    },
+    {
+      "nt_start": 40976249,
+      "nt_stop": 82064412,
+      "record_start": 125149,
+      "record_stop": 249936,
+      "shard": 1
+    },
+    {
+      "nt_start": 82064412,
+      "nt_stop": 122922191,
+      "record_start": 249936,
+      "record_stop": 374501,
+      "shard": 2
+    },
+    {
+      "nt_start": 122922191,
+      "nt_stop": 163820498,
+      "record_start": 374501,
+      "record_stop": 499128,
+      "shard": 3
+    },
+    {
+      "nt_start": 163820498,
+      "nt_stop": 204487271,
+      "record_start": 499128,
+      "record_stop": 623855,
+      "shard": 4
+    },
+    {
+      "nt_start": 204487271,
+      "nt_stop": 245353699,
+      "record_start": 623855,
+      "record_stop": 748894,
+      "shard": 5
+    },
+    {
+      "nt_start": 245353699,
+      "nt_stop": 286178380,
+      "record_start": 748894,
+      "record_stop": 873628,
+      "shard": 6
+    },
+    {
+      "nt_start": 286178380,
+      "nt_stop": 327069762,
+      "record_start": 873628,
+      "record_stop": 998389,
+      "shard": 7
+    },
+    {
+      "nt_start": 327069762,
+      "nt_stop": 367837655,
+      "record_start": 998389,
+      "record_stop": 1123040,
+      "shard": 8
+    },
+    {
+      "nt_start": 367837655,
+      "nt_stop": 408827549,
+      "record_start": 1123040,
+      "record_stop": 1248175,
+      "shard": 9
+    },
+    {
+      "nt_start": 408827549,
+      "nt_stop": 449612570,
+      "record_start": 1248175,
+      "record_stop": 1372475,
+      "shard": 10
+    },
+    {
+      "nt_start": 449612570,
+      "nt_stop": 490454467,
+      "record_start": 1372475,
+      "record_stop": 1496865,
+      "shard": 11
+    },
+    {
+      "nt_start": 490454467,
+      "nt_stop": 531310627,
+      "record_start": 1496865,
+      "record_stop": 1621639,
+      "shard": 12
+    },
+    {
+      "nt_start": 531310627,
+      "nt_stop": 572076476,
+      "record_start": 1621639,
+      "record_stop": 1746254,
+      "shard": 13
+    },
+    {
+      "nt_start": 572076476,
+      "nt_stop": 612928103,
+      "record_start": 1746254,
+      "record_stop": 1870848,
+      "shard": 14
+    },
+    {
+      "nt_start": 612928103,
+      "nt_stop": 653939172,
+      "record_start": 1870848,
+      "record_stop": 1995878,
+      "shard": 15
+    }
+  ],
+  "source_manifest": {
+    "eligible_records": 36850817,
+    "input_records": 48053536,
+    "max_ambiguous_fraction": 0.05,
+    "max_length": 1024,
+    "min_length": 20,
+    "sample_probability": 0.05419,
+    "schema_version": 1,
+    "seed": 20261025,
+    "selected_nt": 653939172,
+    "selected_records": 1995878,
+    "shards": [
+      {
+        "nt": 40976249,
+        "records": 125149,
+        "shard": 0
+      },
+      {
+        "nt": 41088163,
+        "records": 124787,
+        "shard": 1
+      },
+      {
+        "nt": 40857779,
+        "records": 124565,
+        "shard": 2
+      },
+      {
+        "nt": 40898307,
+        "records": 124627,
+        "shard": 3
+      },
+      {
+        "nt": 40666773,
+        "records": 124727,
+        "shard": 4
+      },
+      {
+        "nt": 40866428,
+        "records": 125039,
+        "shard": 5
+      },
+      {
+        "nt": 40824681,
+        "records": 124734,
+        "shard": 6
+      },
+      {
+        "nt": 40891382,
+        "records": 124761,
+        "shard": 7
+      },
+      {
+        "nt": 40767893,
+        "records": 124651,
+        "shard": 8
+      },
+      {
+        "nt": 40989894,
+        "records": 125135,
+        "shard": 9
+      },
+      {
+        "nt": 40785021,
+        "records": 124300,
+        "shard": 10
+      },
+      {
+        "nt": 40841897,
+        "records": 124390,
+        "shard": 11
+      },
+      {
+        "nt": 40856160,
+        "records": 124774,
+        "shard": 12
+      },
+      {
+        "nt": 40765849,
+        "records": 124615,
+        "shard": 13
+      },
+      {
+        "nt": 40851627,
+        "records": 124594,
+        "shard": 14
+      },
+      {
+        "nt": 41011069,
+        "records": 125030,
+        "shard": 15
+      }
+    ]
+  }
+}

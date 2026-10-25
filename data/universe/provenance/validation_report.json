@@ -1,0 +1,17 @@
+{
+  "clusters": 296,
+  "display_points": 300000,
+  "knn_finite_fraction": 1.0,
+  "knn_invalid_fraction": 0.0,
+  "nucleotides": 653939172,
+  "records": 1995878,
+  "status_counts": [
+    105253,
+    1076076,
+    304627,
+    63386,
+    39013,
+    360735,
+    46788
+  ]
+}

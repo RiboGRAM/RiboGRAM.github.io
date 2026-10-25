@@ -1,0 +1,19 @@
+{
+  "clusters": 296,
+  "clusters_with_strict_anchors": 246,
+  "macro_anchored_cluster_purity": 0.8733204007148743,
+  "median_anchored_cluster_purity": 0.9999054670333862,
+  "selected_resolution": 2.0,
+  "selection_rule": "first tested resolution with strict-Rfam weighted purity >= 0.90 and anchored-cluster macro purity >= 0.80; resolution 1.0 was rejected for producing only 206 communities",
+  "size_quantiles": {
+    "0": 18.0,
+    "0.25": 219.75,
+    "0.5": 1240.5,
+    "0.75": 7422.75,
+    "0.9": 16399.0,
+    "0.99": 77421.30000000013,
+    "1": 116241.0
+  },
+  "strict_anchors": 1117305,
+  "weighted_strict_rfam_purity": 0.9196146140685467
+}

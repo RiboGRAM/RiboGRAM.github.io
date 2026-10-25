@@ -1,0 +1,7 @@
+{
+  "clusters": 296,
+  "elapsed_seconds": 1.301987886428833,
+  "mean_representative_similarity": 0.9800018072128296,
+  "method": "member with maximum cosine similarity to the normalized PCA-64 cluster centroid",
+  "minimum_representative_similarity": 0.8910596966743469
+}

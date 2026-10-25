@@ -1,0 +1,129 @@
+--- a/ribogram/model.py
++++ b/ribogram/model.py
+@@ -71,7 +71,8 @@
+         bias: Optional[Tensor],
+         repr_layers: Optional[Iterable[int]],
+         need_head_weights: bool,
+-    ) -> Tuple[Tensor, Dict[int, Tensor], Optional[Tensor]]:
++        attention_layers: Optional[Iterable[int]],
++    ) -> Tuple[Tensor, Dict[int, Tensor], Optional[Tensor], Tuple[int, ...]]:
+         self._validate_tokens(tokens)
+         requested_layers = set(repr_layers or ())
+         invalid_layers = requested_layers.difference(range(self.num_layers + 1))
+@@ -79,6 +80,19 @@
+             raise ValueError(
+                 f"repr_layers contains invalid layer indices: {sorted(invalid_layers)}"
+             )
++        requested_attention_layers = (
++            set(range(1, self.num_layers + 1))
++            if attention_layers is None
++            else set(attention_layers)
++        )
++        invalid_attention_layers = requested_attention_layers.difference(
++            range(1, self.num_layers + 1)
++        )
++        if invalid_attention_layers:
++            raise ValueError(
++                "attention_layers contains invalid layer indices: "
++                f"{sorted(invalid_attention_layers)}"
++            )
+
+         padding_mask: Optional[Tensor] = tokens.eq(self.rna_padding_idx)
+         features = embedding(tokens)
+@@ -95,19 +109,24 @@
+             padding_mask = None
+
+         collected_attention = []
++        collected_attention_layers = []
+         for layer_index, layer in enumerate(self.layers, start=1):
++            collect_attention = (
++                need_head_weights and layer_index in requested_attention_layers
++            )
+             features, attention = layer(
+                 features,
+                 bias=bias,
+                 self_attn_padding_mask=padding_mask,
+-                need_head_weights=need_head_weights,
++                need_head_weights=collect_attention,
+             )
+             if layer_index in requested_layers:
+                 hidden_representations[layer_index] = features.transpose(0, 1)
+-            if need_head_weights:
++            if collect_attention:
+                 if attention is None:
+                     raise RuntimeError("Attention weights were requested but not returned")
+                 collected_attention.append(attention.transpose(1, 0))
++                collected_attention_layers.append(layer_index)
+
+         features = self.layer_norm_after(features).transpose(0, 1)
+         if self.num_layers in requested_layers:
+@@ -115,13 +134,20 @@
+
+         attentions: Optional[Tensor] = None
+         if need_head_weights:
++            if not collected_attention:
++                raise ValueError("At least one attention layer must be requested")
+             attentions = torch.stack(collected_attention, dim=1)
+             if padding_mask is not None:
+                 attention_mask = 1 - padding_mask.type_as(attentions)
+                 attention_mask = attention_mask.unsqueeze(1) * attention_mask.unsqueeze(2)
+                 attentions = attentions * attention_mask[:, None, None, :, :]
+
+-        return features, hidden_representations, attentions
++        return (
++            features,
++            hidden_representations,
++            attentions,
++            tuple(collected_attention_layers),
++        )
+
+
+ class RiboGRAM(_RiboGRAMBackbone):
+@@ -164,13 +190,15 @@
+         bias: Optional[Tensor] = None,
+         repr_layers: Optional[Iterable[int]] = None,
+         need_head_weights: bool = False,
++        attention_layers: Optional[Iterable[int]] = None,
+     ) -> Dict[str, Any]:
+-        representation, hidden, attentions = self._encode(
++        representation, hidden, attentions, collected_attention_layers = self._encode(
+             tokens=rna_seq,
+             embedding=self.rna_tokens,
+             bias=bias,
+             repr_layers=repr_layers,
+             need_head_weights=need_head_weights,
++            attention_layers=attention_layers,
+         )
+         result: Dict[str, Any] = {
+             "logits": self.rna_lm_head(representation),
+@@ -179,6 +207,7 @@
+         }
+         if attentions is not None:
+             result["attentions"] = attentions
++            result["attention_layer_indices"] = collected_attention_layers
+         return result
+
+
+@@ -237,13 +266,15 @@
+         bias: Optional[Tensor] = None,
+         repr_layers: Optional[Iterable[int]] = None,
+         need_head_weights: bool = False,
++        attention_layers: Optional[Iterable[int]] = None,
+     ) -> Dict[str, Any]:
+-        representation, hidden, attentions = self._encode(
++        representation, hidden, attentions, collected_attention_layers = self._encode(
+             tokens=tokens,
+             embedding=self.rna_tokens_expend,
+             bias=bias,
+             repr_layers=repr_layers,
+             need_head_weights=need_head_weights,
++            attention_layers=attention_layers,
+         )
+         rna_logits, all_logits = self.rna_lm_head(representation)
+         pair_logits = self.pair_head(representation[:, 0, :])
+@@ -257,4 +288,5 @@
+         }
+         if attentions is not None:
+             result["attentions"] = attentions
+-        return result+            result["attention_layer_indices"] = collected_attention_layers
++        return result

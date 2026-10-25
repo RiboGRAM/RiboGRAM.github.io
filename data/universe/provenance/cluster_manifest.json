@@ -1,0 +1,23 @@
+{
+  "annotation_status_codes": {
+    "0": "unresolved",
+    "1": "direct_rfam_strict",
+    "2": "direct_rfam_permissive",
+    "3": "ribogram_88_head_high_confidence",
+    "4": "leiden_cluster_consensus_propagated",
+    "5": "computational_novel_candidate",
+    "6": "direct_rfam_vs_model_conflict"
+  },
+  "cluster_consensus_count": 188,
+  "clusters": 296,
+  "conflicts": 46788,
+  "edges": 32307414,
+  "leiden_iterations": 2,
+  "novel_candidate_clusters": 78,
+  "novel_candidate_sequences": 360735,
+  "permissive_annotated": 1427491,
+  "propagated_sequences": 39013,
+  "records": 1995878,
+  "resolution": 2.0,
+  "strict_annotated": 1117305
+}

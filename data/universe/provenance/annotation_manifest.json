@@ -1,0 +1,8 @@
+{
+  "id_mapping_sequences": 1995878,
+  "permissive_definition": "Any match present in RNAcentral release 28 rfam_annotations.tsv.gz",
+  "rfam_filtered_rows": 1489904,
+  "rfam_permissive_sequences": 1427491,
+  "rfam_strict_sequences": 1117305,
+  "strict_definition": "E-value <= 1e-10, bitscore >= 20, sequence coverage >= 0.50"
+}

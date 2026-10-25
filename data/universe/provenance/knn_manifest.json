@@ -1,0 +1,12 @@
+{
+  "faiss_index": "IVFPQ",
+  "input_dimension": 1280,
+  "neighbors": 16,
+  "nlist": 4096,
+  "nprobe": 32,
+  "pca_dimension": 64,
+  "pca_explained_variance": 0.9650148882135807,
+  "pca_sample": 120000,
+  "pq_m": 16,
+  "records": 1995878
+}

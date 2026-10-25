@@ -3,144 +3,117 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#fbf8f2">
-  <meta name="description" content="Explore 92,781 Rfam Seed sequences through the representation space learned by RiboGRAM.">
-  <meta property="og:title" content="RiboGRAM Atlas">
-  <meta property="og:description" content="An interactive atlas of the multi-scale grammar learned across non-coding RNA families.">
-  <title>RiboGRAM Atlas · The landscape of non-coding RNA grammar</title>
+  <meta name="theme-color" content="#071016">
+  <meta name="description" content="Explore the RNAcentral sequence universe through RiboGRAM representations, direct Rfam evidence, attention and zero-shot pairing signals.">
+  <title>RiboGRAM Universe · RNAcentral representation atlas</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/atlas.css?v=20261024-5">
+  <link rel="stylesheet" href="assets/universe.css?v=20261026-2">
 </head>
 <body>
-  <main
-    class="atlas-shell"
-    data-rfam-explorer
-    data-manifest="data/manifest.json"
-    data-details="true"
-    aria-label="RiboGRAM Atlas — Rfam 15.0 Seed representation explorer"
-  >
-    <header class="atlas-nav">
-      <a class="atlas-brand" href="./" aria-label="RiboGRAM Atlas home">
-        <svg class="atlas-mark" viewBox="0 0 40 40" aria-hidden="true">
-          <path d="M11 7c10 0 18 6 18 13s-8 13-18 13" />
-          <path d="M29 7c-10 0-18 6-18 13s8 13 18 13" />
-          <circle cx="12" cy="11" r="2.2" />
-          <circle cx="28" cy="17" r="2.2" />
-          <circle cx="12" cy="23" r="2.2" />
-          <circle cx="28" cy="29" r="2.2" />
+  <main class="universe" data-universe data-source="data/universe/universe.json.gz?v=20261026-1">
+    <header class="universe-nav">
+      <a class="brand" href="./" aria-label="RiboGRAM Universe home">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M13 7c12 0 22 8 22 17S25 41 13 41M35 7C23 7 13 15 13 24s10 17 22 17"/>
+          <circle cx="14" cy="12" r="2.3"/><circle cx="34" cy="19" r="2.3"/>
+          <circle cx="14" cy="28" r="2.3"/><circle cx="34" cy="36" r="2.3"/>
         </svg>
-        <span class="atlas-brand-copy">
-          <strong>RiboGRAM</strong>
-          <span>RNA representation atlas</span>
-        </span>
+        <span><strong>RiboGRAM</strong><small>RNAcentral universe</small></span>
       </a>
-
-      <nav class="atlas-links" aria-label="Project links">
+      <nav aria-label="Atlas navigation">
+        <a class="dataset-pill is-current" href="universe.html">RNAcentral</a>
+        <a class="dataset-pill" href="rfam.html">Rfam seeds</a>
+        <button type="button" data-method-open>Method</button>
         <a href="https://www.biorxiv.org/content/10.64898/2026.10.12.758266v1" target="_blank" rel="noreferrer">Paper</a>
-        <a href="https://www.ultrarnalab.com/ribogram_usage.php" target="_blank" rel="noreferrer">Web server</a>
-        <button type="button" data-atlas-about>Resources</button>
       </nav>
     </header>
 
-    <section class="atlas-map" data-rfx-map aria-label="Interactive RNA representation map">
-      <canvas
-        data-rfx-canvas
-        tabindex="0"
-        role="img"
-        aria-label="Interactive two-dimensional UMAP projection of RiboGRAM Layer-12 sequence representations"
-      ></canvas>
+    <section class="map-stage" data-map-stage aria-label="Interactive RNAcentral representation landscape">
+      <canvas data-map-canvas tabindex="0" role="img" aria-label="UMAP map of a stratified RNAcentral pilot represented by RiboGRAM"></canvas>
+      <div class="map-vignette" aria-hidden="true"></div>
+      <div class="cluster-labels" data-cluster-labels aria-hidden="true"></div>
+      <div class="map-tooltip" data-tooltip hidden></div>
 
-      <div class="rfx-tooltip" data-rfx-tooltip hidden></div>
-
-      <div class="rfx-map-loading" data-rfx-loading>
-        <svg class="loading-orbit" viewBox="0 0 56 56" aria-hidden="true">
-          <circle cx="28" cy="28" r="17"></circle>
-          <circle cx="28" cy="11" r="3"></circle>
-        </svg>
-        <strong>Mapping the RNA universe</strong>
-        <span>92,781 Rfam Seed sequences</span>
+      <div class="loading" data-loading>
+        <span class="loading-orbit"><i></i><i></i><i></i></span>
+        <p>Charting the RNA universe</p>
+        <small>Loading the RNAcentral × RiboGRAM atlas…</small>
       </div>
-    </section>
 
-    <section class="atlas-toolbar" role="search" aria-label="Explore the RNA atlas">
-      <label class="rfx-search">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>
-        <span class="rfx-visually-hidden">Search sequence or family</span>
-        <input type="search" data-rfx-search placeholder="Search family, accession or RNA sequence" autocomplete="off">
-        <kbd>/</kbd>
-      </label>
-
-      <label class="rfx-control">
-        <span>Family</span>
-        <select data-rfx-family aria-label="Filter by Rfam family">
-          <option value="all">All 4,178 families</option>
-        </select>
-      </label>
-
-    </section>
-
-    <section class="atlas-legend-shell" aria-label="Map legend">
-      <div class="atlas-legend-head">
-        <div class="atlas-visible">
-          <span class="atlas-live-dot"></span>
-          <strong data-rfx-visible>92,781 sequences</strong>
+      <article class="map-intro" data-intro>
+        <p class="eyebrow">RNACENTRAL RELEASE 28 · RIBOGRAM</p>
+        <h1>A map of the<br><em>RNA universe.</em></h1>
+        <p>Sequence neighborhoods emerge from representations learned by RiboGRAM. Direct Rfam evidence, model hypotheses and uncharted clusters remain visibly distinct.</p>
+        <div class="intro-stats">
+          <span><strong data-stat-pilot>—</strong><small>pilot sequences</small></span>
+          <span><strong data-stat-clusters>—</strong><small>Leiden clusters</small></span>
+          <span><strong data-stat-display>—</strong><small>points shown</small></span>
         </div>
-        <label class="rfx-color-control">
-          <span>Color by</span>
-          <select data-rfx-color aria-label="Color points by">
-            <option value="subtype">RNA subtype</option>
-            <option value="class">Rfam class</option>
-            <option value="neutral">All RNAs</option>
-            <option value="family">Rfam family</option>
-          </select>
+        <button type="button" data-enter-map>Enter the atlas <span>↘</span></button>
+      </article>
+
+      <form class="map-controls" data-controls role="search" aria-label="Explore RNAcentral">
+        <label class="search-control">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>
+          <span class="sr-only">Search</span>
+          <input type="search" data-search placeholder="Search URS accession, family or cluster" autocomplete="off">
+          <kbd>/</kbd>
         </label>
-      </div>
-      <div class="atlas-class-key" data-rfx-class-key aria-label="Rfam class color key"></div>
-      <div class="rfx-legend" data-rfx-legend aria-label="Projection legend"></div>
-      <button class="atlas-legend-toggle" type="button" data-legend-toggle aria-expanded="false">Legend</button>
+        <label><span>Color</span><select data-color-mode>
+          <option value="type13">RiboGRAM RNA class</option>
+          <option value="status">Evidence status</option>
+          <option value="taxonomy">Taxonomic domain</option>
+          <option value="family">RNA family</option>
+          <option value="cluster">Leiden cluster</option>
+        </select></label>
+        <label><span>Evidence</span><select data-status-filter>
+          <option value="all">All evidence levels</option>
+          <option value="direct">Direct Rfam</option>
+          <option value="model">Model-supported</option>
+          <option value="propagated">Cluster-propagated</option>
+          <option value="novel">Novel candidates</option>
+          <option value="unresolved">Unresolved</option>
+        </select></label>
+        <button class="reset-button" type="button" data-reset title="Reset view" aria-label="Reset map view">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg>
+        </button>
+      </form>
+
+      <div class="map-legend" data-legend></div>
+      <div class="map-guide"><span>scroll · zoom</span><i></i><span>drag · travel</span><i></i><span>select · inspect</span></div>
+      <div class="visible-count"><i></i><span data-visible-count>— RNAs</span></div>
     </section>
 
-    <button class="rfx-icon-button" type="button" data-rfx-reset title="Fit map to view" aria-label="Fit map to view">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"></path></svg>
-    </button>
-
-    <div class="atlas-map-guide">
-      <span>Scroll to zoom</span><i></i><span>Drag to move</span><i></i><span>Click an RNA</span>
-    </div>
-
-    <aside class="rfx-inspector" data-rfx-inspector aria-live="polite" aria-label="Selected RNA details">
-      <div class="rfx-inspector-empty">
-        <span class="empty-orbit"><i></i></span>
-        <strong>Select an RNA</strong>
-        <p>Inspect position-resolved contextual-dependency scores and zero-shot base-pairing signals derived from RiboGRAM.</p>
+    <aside class="inspector" data-inspector aria-live="polite" aria-label="Selected RNA details">
+      <button type="button" class="inspector-close" data-inspector-close aria-label="Close inspector">×</button>
+      <div class="inspector-empty">
+        <span class="empty-glyph"><i></i></span>
+        <p>Select an RNA to inspect its evidence, neighborhood and position-resolved RiboGRAM signals.</p>
       </div>
     </aside>
+    <button class="inspector-backdrop" type="button" data-inspector-backdrop aria-label="Close inspector"></button>
+    <div class="fatal" data-fatal hidden></div>
 
-    <button class="atlas-drawer-backdrop" type="button" data-inspector-backdrop aria-label="Close selected RNA details"></button>
-    <div class="rfx-fatal" data-rfx-fatal hidden></div>
-
-    <dialog class="atlas-about" data-about-dialog>
-      <button class="atlas-dialog-close" type="button" data-about-close aria-label="Close">×</button>
-      <p class="atlas-eyebrow">RIBOGRAM ATLAS</p>
-      <h2>A representation atlas of non-coding RNA sequence space.</h2>
-      <p>The atlas comprises 92,781 sequences from 4,178 Rfam 15.0 Seed families. Each point is positioned by a two-dimensional UMAP projection of the corresponding RiboGRAM Layer-12 representation.</p>
-      <dl>
-        <div><dt>Model</dt><dd>RiboGRAM</dd></div>
-        <div><dt>Collection</dt><dd>Rfam 15.0 Seed</dd></div>
-        <div><dt>Projection</dt><dd>Layer 12 · UMAP</dd></div>
-      </dl>
-      <a class="atlas-paper-button" href="https://www.biorxiv.org/content/10.64898/2026.10.12.758266v1" target="_blank" rel="noreferrer">Read the RiboGRAM preprint <span>↗</span></a>
-      <div class="atlas-resource-links" aria-label="RiboGRAM resources">
-        <a href="https://zenodo.org/records/23201637" target="_blank" rel="noreferrer"><span>Source code & analysis</span><strong>Zenodo ↗</strong></a>
+    <dialog class="method-dialog" data-method-dialog>
+      <button type="button" class="dialog-close" data-method-close aria-label="Close">×</button>
+      <p class="eyebrow">HOW TO READ THIS ATLAS</p>
+      <h2>Evidence first,<br>hypotheses second.</h2>
+      <div class="method-grid">
+        <section><b>01</b><h3>Represent</h3><p>Layer-12 RiboGRAM representations summarize each RNA sequence. The pilot is length-filtered to 20–1,024 nt.</p></section>
+        <section><b>02</b><h3>Connect</h3><p>PCA-compressed embeddings form an approximate cosine k-nearest-neighbor graph, partitioned with Leiden.</p></section>
+        <section><b>03</b><h3>Annotate</h3><p>Direct RNAcentral/Rfam matches take precedence. High-confidence model and cluster-consensus labels are shown as predictions, never as curated facts.</p></section>
+        <section><b>04</b><h3>Interrogate</h3><p>Cluster representatives expose per-nucleotide Layer-7/12 received attention and zero-shot Head-20 pairing scores.</p></section>
+      </div>
+      <p class="method-warning">“Novel candidate” means computationally unannotated in this pipeline. It is not a claim of a new biological RNA family and requires independent validation.</p>
+      <div class="resource-links">
+        <a href="https://zenodo.org/records/23201637" target="_blank" rel="noreferrer"><span>Source & analyses</span><strong>Zenodo ↗</strong></a>
         <a href="https://codeocean.com/capsule/2602506/tree/v1" target="_blank" rel="noreferrer"><span>Executable capsule</span><strong>Code Ocean ↗</strong></a>
         <a href="https://www.ultrarnalab.com/ribogram.php" target="_blank" rel="noreferrer"><span>Project resources</span><strong>RiboGRAM portal ↗</strong></a>
         <a href="https://www.ultrarnalab.com/ribogram_usage.php" target="_blank" rel="noreferrer"><span>Interactive inference</span><strong>Web server ↗</strong></a>
       </div>
-      <p class="atlas-citation">Wang H., Chen Z., Huang H. et al. <em>RiboGRAM learns multi-scale non-coding RNA grammar for structural and regulatory inference.</em> bioRxiv (2026).</p>
     </dialog>
   </main>
-
-  <noscript>RiboGRAM Atlas requires JavaScript to render the interactive map.</noscript>
-  <script src="assets/atlas.js?v=20261024-5" defer></script>
+  <noscript>RiboGRAM Universe requires JavaScript and WebGL.</noscript>
+  <script src="assets/universe.js?v=20261026-4" defer></script>
 </body>
 </html>

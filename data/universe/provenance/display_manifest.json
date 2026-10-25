@@ -1,0 +1,8 @@
+{
+  "mandatory_cluster_representatives": 296,
+  "points": 300000,
+  "projection_note": "UMAP is a stochastic display projection of a stratified pilot subset; distances are not a phylogeny.",
+  "umap_epochs": 180,
+  "umap_min_dist": 0.08,
+  "umap_neighbors": 30
+}
