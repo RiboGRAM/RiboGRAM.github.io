@@ -1,9 +1,9 @@
 (function () {
   "use strict";
 
-  const TYPE_COLORS = ["#7cc7c2", "#5592c9", "#efa65f", "#9a84cf", "#4cb69a", "#e27d96", "#c3a25b", "#78a8b0", "#8069a8", "#5f7ab8", "#ca769f", "#e07656", "#8e9db6"];
-  const STATUS_COLORS = ["#67757b", "#58d1ad", "#82bfae", "#efbd63", "#729cd7", "#e36c72", "#d882ba"];
-  const TAXON_COLORS = { 1: "#62b7d1", 2: "#e4a15b", 4: "#9a84d0", 8: "#e56d77", mixed: "#79c796", other: "#78878b" };
+  const TYPE_COLORS = ["#078f82", "#347db8", "#d7782f", "#7758b6", "#24966e", "#c94f70", "#9a741c", "#377e8b", "#674d98", "#435fa5", "#ad4e87", "#c85236", "#60718f"];
+  const STATUS_COLORS = ["#8b9491", "#0b8b6f", "#359a84", "#c98019", "#4d74b8", "#c84961", "#a34286"];
+  const TAXON_COLORS = { 1: "#208aaa", 2: "#c97828", 4: "#7558b5", 8: "#c84955", mixed: "#2f9661", other: "#818b89" };
   const STATUS_SHORT = ["Unresolved", "Direct · strict", "Direct · permissive", "RiboGRAM-88", "Cluster consensus", "Novel candidate", "Evidence conflict"];
   const STATUS_GROUPS = {
     direct: new Set([1, 2, 6]), model: new Set([3]), propagated: new Set([4]),
@@ -105,7 +105,7 @@
       rootEvent(this.root, "[data-inspector-close]", "click", () => this.closeInspector());
       this.backdrop.addEventListener("click", () => this.closeInspector());
       const dialog = this.root.querySelector("[data-method-dialog]");
-      rootEvent(this.root, "[data-method-open]", "click", () => dialog.showModal());
+      this.root.querySelectorAll("[data-method-open]").forEach((element) => element.addEventListener("click", () => dialog.showModal()));
       rootEvent(this.root, "[data-method-close]", "click", () => dialog.close());
       this.colorMode.addEventListener("change", () => { this.mode = this.colorMode.value; this.updateColors(); });
       this.statusFilter.addEventListener("change", () => { this.filter = this.statusFilter.value; this.updateColors(); });
@@ -193,7 +193,7 @@
       if (!this.data) return; const colors = new Uint8Array(this.count * 4); let visible = 0;
       for (let i = 0; i < this.count; i += 1) {
         const rgb = this.pointColor(i), show = this.matches(i); if (show) visible += 1;
-        colors[i * 4] = rgb[0]; colors[i * 4 + 1] = rgb[1]; colors[i * 4 + 2] = rgb[2]; colors[i * 4 + 3] = show ? 164 : 3;
+        colors[i * 4] = rgb[0]; colors[i * 4 + 1] = rgb[1]; colors[i * 4 + 2] = rgb[2]; colors[i * 4 + 3] = show ? 205 : 3;
       }
       this.colors = colors; const gl = this.gl; gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer); gl.bufferData(gl.ARRAY_BUFFER, colors, gl.DYNAMIC_DRAW);
       this.root.querySelector("[data-visible-count]").textContent = `${compact(visible)} RNAs visible`;
@@ -274,7 +274,15 @@
     buildLabels() {
       const candidates = this.data.clusters.map((row, id) => ({ id, row })).filter((item) => item.row[3] >= 0 || item.row[6]);
       candidates.sort((a, b) => b.row[0] - a.row[0]); this.labelsLayer.innerHTML = "";
-      for (const item of candidates.slice(0, 28)) {
+      const chosen = [], seenFamilies = new Set();
+      for (const item of candidates) {
+        if (item.row[3] >= 0) {
+          if (seenFamilies.has(item.row[3])) continue;
+          seenFamilies.add(item.row[3]);
+        }
+        chosen.push(item); if (chosen.length >= 28) break;
+      }
+      for (const item of chosen) {
         const family = item.row[3] >= 0 ? this.families[item.row[3]] : null, element = document.createElement("span"); element.className = "cluster-label";
         element.innerHTML = `<b>${escapeHTML(family?.accession || `Cluster ${item.id}`)}</b>${escapeHTML(family?.description || "novel-candidate neighborhood")}`;
         this.labelsLayer.appendChild(element); this.labels.push({ x: item.row[7], y: item.row[8], element });

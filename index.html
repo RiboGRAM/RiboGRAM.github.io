@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#071016">
+  <meta name="theme-color" content="#f7f8f5">
   <meta name="description" content="Explore the RNAcentral sequence universe through RiboGRAM representations, direct Rfam evidence, attention and zero-shot pairing signals.">
   <title>RiboGRAM Universe · RNAcentral representation atlas</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/universe.css?v=20261026-2">
+  <link rel="stylesheet" href="assets/universe.css?v=20261026-3">
 </head>
 <body>
   <main class="universe" data-universe data-source="data/universe/universe.json.gz?v=20261026-1">
@@ -23,7 +23,7 @@
       <nav aria-label="Atlas navigation">
         <a class="dataset-pill is-current" href="universe.html">RNAcentral</a>
         <a class="dataset-pill" href="rfam.html">Rfam seeds</a>
-        <button type="button" data-method-open>Method</button>
+        <button type="button" data-method-open>How to read</button>
         <a href="https://www.biorxiv.org/content/10.64898/2026.10.12.758266v1" target="_blank" rel="noreferrer">Paper</a>
       </nav>
     </header>
@@ -43,13 +43,21 @@
       <article class="map-intro" data-intro>
         <p class="eyebrow">RNACENTRAL RELEASE 28 · RIBOGRAM</p>
         <h1>A map of the<br><em>RNA universe.</em></h1>
-        <p>Sequence neighborhoods emerge from representations learned by RiboGRAM. Direct Rfam evidence, model hypotheses and uncharted clusters remain visibly distinct.</p>
+        <p>Each dot is one RNA sequence. Nearby dots have similar RiboGRAM representations; islands are candidate sequence and structural neighborhoods—not a phylogenetic tree.</p>
+        <ul class="reading-primer" aria-label="Map reading key">
+          <li><b>DOT</b><span>one RNA sequence</span></li>
+          <li><b>DISTANCE</b><span>representation similarity</span></li>
+          <li><b>ISLAND</b><span>Leiden neighborhood</span></li>
+        </ul>
         <div class="intro-stats">
           <span><strong data-stat-pilot>—</strong><small>pilot sequences</small></span>
           <span><strong data-stat-clusters>—</strong><small>Leiden clusters</small></span>
           <span><strong data-stat-display>—</strong><small>points shown</small></span>
         </div>
-        <button type="button" data-enter-map>Enter the atlas <span>↘</span></button>
+        <div class="intro-actions">
+          <button type="button" data-enter-map>Enter the atlas <span>↘</span></button>
+          <button type="button" class="read-button" data-method-open>What can I learn?</button>
+        </div>
       </article>
 
       <form class="map-controls" data-controls role="search" aria-label="Explore RNAcentral">
@@ -77,6 +85,7 @@
         <button class="reset-button" type="button" data-reset title="Reset view" aria-label="Reset map view">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg>
         </button>
+        <button class="help-button" type="button" data-method-open title="How to read this map" aria-label="How to read this map">?</button>
       </form>
 
       <div class="map-legend" data-legend></div>
@@ -96,15 +105,23 @@
 
     <dialog class="method-dialog" data-method-dialog>
       <button type="button" class="dialog-close" data-method-close aria-label="Close">×</button>
-      <p class="eyebrow">HOW TO READ THIS ATLAS</p>
-      <h2>Evidence first,<br>hypotheses second.</h2>
+      <p class="eyebrow">HOW TO READ THE RNA UNIVERSE</p>
+      <h2>What this map<br>can tell you.</h2>
+      <div class="insight-grid">
+        <section><b>01 · IDENTITY</b><h3>What kind of RNA is here?</h3><p>Color by RNA class or family. A single-color island agrees with a known label; a mixed island may contain shared grammar or unresolved boundaries.</p></section>
+        <section><b>02 · EVIDENCE</b><h3>How certain is the label?</h3><p>Color or filter by evidence to separate direct Rfam matches, model-supported predictions, cluster propagation and computationally novel candidates.</p></section>
+        <section><b>03 · EVOLUTION</b><h3>Where is it observed?</h3><p>Color by taxonomy to distinguish domain-restricted neighborhoods from representation patterns shared across Bacteria, Archaea, Eukaryota or viruses.</p></section>
+        <section><b>04 · NEIGHBORHOOD</b><h3>How coherent is the cluster?</h3><p>Click a point to see its Leiden cluster size, Rfam anchor count and purity. High purity means known family labels agree locally.</p></section>
+        <section><b>05 · GRAMMAR</b><h3>Which nucleotides matter?</h3><p>Representative RNAs expose Layer-7/12 received attention and Head-20 zero-shot pairing scores at nucleotide resolution.</p></section>
+      </div>
+      <h3 class="method-subtitle">How the map was built</h3>
       <div class="method-grid">
         <section><b>01</b><h3>Represent</h3><p>Layer-12 RiboGRAM representations summarize each RNA sequence. The pilot is length-filtered to 20–1,024 nt.</p></section>
         <section><b>02</b><h3>Connect</h3><p>PCA-compressed embeddings form an approximate cosine k-nearest-neighbor graph, partitioned with Leiden.</p></section>
         <section><b>03</b><h3>Annotate</h3><p>Direct RNAcentral/Rfam matches take precedence. High-confidence model and cluster-consensus labels are shown as predictions, never as curated facts.</p></section>
         <section><b>04</b><h3>Interrogate</h3><p>Cluster representatives expose per-nucleotide Layer-7/12 received attention and zero-shot Head-20 pairing scores.</p></section>
       </div>
-      <p class="method-warning">“Novel candidate” means computationally unannotated in this pipeline. It is not a claim of a new biological RNA family and requires independent validation.</p>
+      <p class="method-warning"><strong>Interpretation boundary.</strong> UMAP axes have no biological unit and global distances can be distorted: read local neighborhoods, not left/right position. “Novel candidate” means computationally unannotated in this pipeline—not a claim of a new RNA family—and requires independent validation.</p>
       <div class="resource-links">
         <a href="https://zenodo.org/records/23201637" target="_blank" rel="noreferrer"><span>Source & analyses</span><strong>Zenodo ↗</strong></a>
         <a href="https://codeocean.com/capsule/2602506/tree/v1" target="_blank" rel="noreferrer"><span>Executable capsule</span><strong>Code Ocean ↗</strong></a>
@@ -114,6 +131,8 @@
     </dialog>
   </main>
   <noscript>RiboGRAM Universe requires JavaScript and WebGL.</noscript>
-  <script src="assets/universe.js?v=20261026-4" defer></script>
+  <script src="assets/universe.js?v=20261026-6" defer></script>
 </body>
 </html>
+
+\n
